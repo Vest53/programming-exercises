@@ -1,4 +1,4 @@
-submit50 cs50/problems/2024/x/cash
+submit50 cs50/problems/2024/x/mario/lesssubmit50 cs50/problems/2024/x/cash
 #include <stdio.h>
 
 int main()
