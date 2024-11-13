@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 
 int main() {
@@ -5,7 +6,11 @@ int main() {
 
     do {
         printf("Change owed: ");
-        scanf("%d", &change);
+
+        if (scanf("%d", &change) != 1) {
+            while (getchar() != '\n');
+            change = -1;
+        }
 
         if (change < 1) {
             printf("Please enter a value greater than 0.\n");
@@ -25,5 +30,8 @@ int main() {
         }
     }
 
-    printf("%d\n", coinns);
 
+    printf("%d\n", coins);
+
+    return 0;
+}
