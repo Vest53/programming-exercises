@@ -23,7 +23,7 @@ int main() {
     int coinsAvailable[] = {25, 10, 5, 1};
     int numCoins = sizeof(coinsAvailable) / sizeof(coinsAvailable[0]);
 
-    for (int i = 0; i < numMoedas; i++) {
+    for (int i = 0; i < numCoins; i++) {
         while (change >= coinsAvailable[i]) {
             change -= coinsAvailable[i];
             coins++;
