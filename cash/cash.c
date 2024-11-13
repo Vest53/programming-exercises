@@ -3,13 +3,14 @@
 
 int main() {
     int change;
-
+// Requests the change amount from the user
     do {
         printf("Change owed: ");
+// Checks if the input is valid
+        if (scanf("%d", &change) != 1) {// Clear invalid input
+            while (getchar() != '\n');// Clear the input buffer
+            change = -1;// Set change as invalid
 
-        if (scanf("%d", &change) != 1) {
-            while (getchar() != '\n');
-            change = -1;
         }
 
         if (change < 1) {
