@@ -19,7 +19,7 @@ int main() {
 
     // Build the pyramid
     for (int i = 1; i <= height; i++) {
-        // Print leading spaces
+        // Print leading spaces for the first pyramid
         for (int j = 0; j < height - i; j++) {
             printf(" ");
         }
