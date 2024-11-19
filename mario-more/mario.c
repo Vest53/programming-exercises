@@ -1,42 +1,42 @@
 #include <stdio.h>
 
 int main() {
-    int altura;
+    int height;
     char buffer[10];
 
     while (1) {
-        printf("Digite a altura da pirâmide (entre 1 e 8): ");
+        printf("Enter the height of the pyramid (between 1 and 8): ");
         fgets(buffer, sizeof(buffer), stdin);
 
-        // Tenta converter a entrada para um inteiro
-        if (sscanf(buffer, "%d", &altura) == 1 && altura >= 1 && altura <= 8) {
-            break; // Saia do loop se a entrada for válida
+        // Try to convert the input to an integer
+        if (sscanf(buffer, "%d", &height) == 1 && height >= 1 && height <= 8) {
+            break; // Exit the loop if the input is valid
         } else {
-            printf("Entrada inválida. Tente novamente.\n");
+            printf("Invalid input. Please try again.\n");
         }
     }
 
-    // Construir a pirâmide
-    for (int i = 1; i <= altura; i++) {
-        // Imprimir espaços à esquerda
-        for (int j = 0; j < altura - i; j++) {
+    // Build the pyramid
+    for (int i = 1; i <= height; i++) {
+        // Print leading spaces
+        for (int j = 0; j < height - i; j++) {
             printf(" ");
         }
 
-        // Imprimir hashes para a primeira pirâmide
+        // Print hashes for the first pyramid
         for (int j = 0; j < i; j++) {
             printf("#");
         }
 
-        // Imprimir espaço entre as pirâmides
+        // Print space between the pyramids
         printf("  ");
 
-        // Imprimir hashes para a segunda pirâmide
+        // Print hashes for the second pyramid
         for (int j = 0; j < i; j++) {
             printf("#");
         }
 
-        // Nova linha após cada nível
+        // New line after each level
         printf("\n");
     }
 
