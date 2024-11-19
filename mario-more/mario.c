@@ -1,4 +1,3 @@
-check50 cs50/problems/2024/x/mario/more
 #include <stdio.h>
 
 int main()
