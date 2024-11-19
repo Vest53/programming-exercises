@@ -61,31 +61,22 @@ int is_valid(long number) {
 
 int get_card_type(long number) {
     // Get the first two digits and the total number of digits
-    int first_digit = number;
-    while (first_digit >= 10) {
-        first_digit /= 10;
-    }
-
     int num_digits = 0;
     long temp = number;
+
     while (temp > 0) {
         num_digits++;
         temp /= 10;
     }
 
+    int first_digit = number / (long) pow(10, num_digits - 1);
+    int first_two_digits = number / (long) pow(10, num_digits - 2);
+
     // Determine the card type
-    if (num_digits == 15 && (first_digit == 3)) {
-        // AMEX starts with 34 or 37
-        int second_digit = number / 10 % 10;
-        if (second_digit == 4 || second_digit == 7) {
-            return 1;  // AMEX
-        }
-    } else if (num_digits == 16 && (first_digit == 5)) {
-        // MasterCard starts with 51, 52, 53, 54, or 55
-        int second_digit = number / 10 % 10;
-        if (second_digit >= 1 && second_digit <= 5) {
-            return 2;  // MASTERCARD
-        }
+    if (num_digits == 15 && (first_two_digits == 34 || first_two_digits == 37)) {
+        return 1;  // AMEX
+    } else if (num_digits == 16 && (first_two_digits >= 51 && first_two_digits <= 55)) {
+        return 2;  // MASTERCARD
     } else if ((num_digits == 13 || num_digits == 16) && first_digit == 4) {
         return 3;  // VISA
     }
