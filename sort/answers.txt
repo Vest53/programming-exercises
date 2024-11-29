@@ -1,6 +1,7 @@
-sort1 uses: ubble Sort
+sort1 uses: Bubble Sort
 
-How do you know?: TODO
+How do you know?:
+why was he faster in both tests
 
 sort2 uses: Merge Sort
 
