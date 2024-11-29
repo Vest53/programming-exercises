@@ -11,4 +11,5 @@ why faster in both tests
 
 sort3 uses: Selection Sort
 
-How do you know?: TODO
+How do you know?:
+why he was intermediate in both tests
