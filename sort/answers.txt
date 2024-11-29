@@ -1,11 +1,13 @@
 sort1 uses: Bubble Sort
 
 How do you know?:
-why was he faster in both tests
+
+why slower in both tests
 
 sort2 uses: Merge Sort
 
-How do you know?: TODO
+How do you know?:
+why faster in both tests
 
 sort3 uses: Selection Sort
 
