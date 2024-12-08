@@ -4,9 +4,14 @@
 #define MAX_CANDIDATES 100
 #define MAX_NAME_LENGTH 50
 
+// Candidate structure
+typedef struct {
+    char name[MAX_NAME_LENGTH];
+    int votes;
+} Candidate;
+
 int main() {
-    char candidates[MAX_CANDIDATES][MAX_NAME_LENGTH];
-    int votes[MAX_CANDIDATES] = {0};
+    Candidate candidates[MAX_CANDIDATES];
     int num_candidates, num_voters;
 
     // Input number of candidates
@@ -17,8 +22,9 @@ int main() {
     // Input candidate names
     for (int i = 0; i < num_candidates; i++) {
         printf("Enter the name of candidate %d: ", i + 1);
-        fgets(candidates[i], MAX_NAME_LENGTH, stdin);
-        candidates[i][strcspn(candidates[i], "\n")] = 0; // remove newline
+        fgets(candidates[i].name, MAX_NAME_LENGTH, stdin);
+        candidates[i].name[strcspn(candidates[i].name, "\n")] = 0; // remove newline
+        candidates[i].votes = 0; // initialize votes to 0
     }
 
     // Input number of voters
@@ -36,8 +42,8 @@ int main() {
         // Check if the candidate exists and count the vote
         int found = 0;
         for (int j = 0; j < num_candidates; j++) {
-            if (strcmp(vote, candidates[j]) == 0) {
-                votes[j]++;
+            if (strcmp(vote, candidates[j].name) == 0) {
+                candidates[j].votes++;
                 found = 1;
                 break;
             }
@@ -51,8 +57,8 @@ int main() {
     int max_votes = 0;
     int winner_index = -1;
     for (int i = 0; i < num_candidates; i++) {
-        if (votes[i] > max_votes) {
-            max_votes = votes[i];
+        if (candidates[i].votes > max_votes) {
+            max_votes = candidates[i].votes;
             winner_index = i;
         }
     }
@@ -60,11 +66,11 @@ int main() {
     // Display results
     printf("\nElection Results:\n");
     for (int i = 0; i < num_candidates; i++) {
-        printf("%s: %d votes\n", candidates[i], votes[i]);
+        printf("%s: %d votes\n", candidates[i].name, candidates[i].votes);
     }
 
     if (winner_index != -1) {
-        printf("\nThe winner is: %s with %d votes.\n", candidates[winner_index], max_votes);
+        printf("\nThe winner is: %s with %d votes.\n", candidates[winner_index].name, max_votes);
     }
 
     return 0;
