@@ -1,20 +1,23 @@
 #include <stdio.h>
 #include <string.h>
 
-// Assuming the maximum number of candidates and their structure are defined in plurality.c
 #define MAX_CANDIDATES 100
 #define MAX_NAME_LENGTH 50
 
+// Define the Candidate structure
 typedef struct {
     char name[MAX_NAME_LENGTH];
     int votes;
 } Candidate;
 
-// Declaration of the function to simulate the election
+// Function to simulate the election
 void run_election(Candidate candidates[], int candidate_count, int voter_count);
 
 int main() {
+    // Declare an array of candidates
     Candidate candidates[MAX_CANDIDATES];
+
+    // Initialize the number of candidates
     int candidate_count = 3;
 
     // Initialize candidates
@@ -30,7 +33,7 @@ int main() {
     // Simulate a fixed number of voters
     int voter_count = 5;
 
-    // Run the election with fixed votes for testing
+    // Call the function to run the election
     run_election(candidates, candidate_count, voter_count);
 
     return 0;
@@ -39,7 +42,7 @@ int main() {
 // Function to run the election
 void run_election(Candidate candidates[], int candidate_count, int voter_count) {
     // Simulated votes
-    char* votes[] = {"Alice", "Bob", "Alice", "Charlie", "Alice"};
+    char *votes[] = {"Alice", "Bob", "Alice", "Charlie", "Alice"};
 
     // Count the votes
     for (int i = 0; i < voter_count; i++) {
