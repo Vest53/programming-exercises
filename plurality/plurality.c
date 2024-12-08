@@ -4,20 +4,17 @@
 #define MAX_CANDIDATES 100
 #define MAX_NAME_LENGTH 50
 
-// Define the Candidate structure
 typedef struct {
     char name[MAX_NAME_LENGTH];
     int votes;
 } Candidate;
 
-// Function to run the election
+// Function prototypes
 void run_election(Candidate candidates[], int candidate_count, int voter_count);
+int vote(Candidate candidates[], int candidate_count, char *name);
 
-int main() {
-    // Declare an array of candidates
+int main(int argc, char *argv[]) {
     Candidate candidates[MAX_CANDIDATES];
-
-    // Initialize the number of candidates
     int candidate_count = 3;
 
     // Initialize candidates
@@ -73,4 +70,10 @@ void run_election(Candidate candidates[], int candidate_count, int voter_count) 
     if (winner_index != -1) {
         printf("\nThe winner is: %s with %d votes.\n", candidates[winner_index].name, max_votes);
     }
+}
+
+// Function to register a vote
+int vote(Candidate candidates[], int candidate_count, char *name) {
+    // Implementation of vote function if needed
+    return 0; // Placeholder return
 }
