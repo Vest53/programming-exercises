@@ -60,4 +60,17 @@ void run_election(Candidate candidates[], int candidate_count, int voter_count) 
         printf("%s: %d votes\n", candidates[i].name, candidates[i].votes);
     }
 
-    // Determine
+    // Determine winner
+    int max_votes = 0;
+    int winner_index = -1;
+    for (int i = 0; i < candidate_count; i++) {
+        if (candidates[i].votes > max_votes) {
+            max_votes = candidates[i].votes;
+            winner_index = i;
+        }
+    }
+
+    if (winner_index != -1) {
+        printf("\nThe winner is: %s with %d votes.\n", candidates[winner_index].name, max_votes);
+    }
+}
