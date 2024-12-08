@@ -20,10 +20,7 @@ int main() {
 
     // Solicita o número de candidatos
     printf("Informe o número de candidatos (até %d): ", MAX_CANDIDATES);
-    scanf("%d", &candidate_count);
-
-    // Valida o número de candidatos
-    if (candidate_count < 1 || candidate_count > MAX_CANDIDATES) {
+    if (scanf("%d", &candidate_count) != 1 || candidate_count < 1 || candidate_count > MAX_CANDIDATES) {
         printf("Número inválido de candidatos.\n");
         return 1;
     }
@@ -31,19 +28,22 @@ int main() {
     // Inicializa os candidatos
     for (int i = 0; i < candidate_count; i++) {
         printf("Informe o nome do candidato %d: ", i + 1);
-        scanf("%s", candidates[i].name);
+        scanf("%49s", candidates[i].name); // Limita a entrada
         candidates[i].votes = 0;
     }
 
     int voter_count;
     printf("Informe o número de eleitores: ");
-    scanf("%d", &voter_count);
+    if (scanf("%d", &voter_count) != 1) {
+        printf("Número inválido de eleitores.\n");
+        return 1;
+    }
 
     // Votação
     for (int i = 0; i < voter_count; i++) {
         char name[MAX_NAME_LENGTH];
         printf("Informe o nome do candidato para votar: ");
-        scanf("%s", name);
+        scanf("%49s", name); // Limita a entrada
 
         if (!vote(candidates, candidate_count, name)) {
             printf("Voto inválido para %s.\n", name);
