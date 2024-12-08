@@ -4,16 +4,19 @@
 #define MAX_CANDIDATES 100
 #define MAX_NAME_LENGTH 50
 
+// Define the Candidate structure
 typedef struct {
     char name[MAX_NAME_LENGTH];
     int votes;
 } Candidate;
 
 // Function prototypes
-void run_election(Candidate candidates[], int candidate_count, int voter_count);
 int vote(Candidate candidates[], int candidate_count, char *name);
+void print_winner(Candidate candidates[], int candidate_count);
+void run_election(Candidate candidates[], int candidate_count, int voter_count);
 
-int main(int argc, char *argv[]) {
+int main() {
+    // Declare an array of candidates
     Candidate candidates[MAX_CANDIDATES];
     int candidate_count = 3;
 
@@ -30,7 +33,7 @@ int main(int argc, char *argv[]) {
     // Simulate a fixed number of voters
     int voter_count = 5;
 
-    // Call the function to run the election
+    // Run the election
     run_election(candidates, candidate_count, voter_count);
 
     return 0;
@@ -43,12 +46,7 @@ void run_election(Candidate candidates[], int candidate_count, int voter_count) 
 
     // Count the votes
     for (int i = 0; i < voter_count; i++) {
-        for (int j = 0; j < candidate_count; j++) {
-            if (strcmp(votes[i], candidates[j].name) == 0) {
-                candidates[j].votes++;
-                break;
-            }
-        }
+        vote(candidates, candidate_count, votes[i]);
     }
 
     // Display results
@@ -57,23 +55,38 @@ void run_election(Candidate candidates[], int candidate_count, int voter_count) 
         printf("%s: %d votes\n", candidates[i].name, candidates[i].votes);
     }
 
-    // Determine winner
-    int max_votes = 0;
-    int winner_index = -1;
-    for (int i = 0; i < candidate_count; i++) {
-        if (candidates[i].votes > max_votes) {
-            max_votes = candidates[i].votes;
-            winner_index = i;
-        }
-    }
-
-    if (winner_index != -1) {
-        printf("\nThe winner is: %s with %d votes.\n", candidates[winner_index].name, max_votes);
-    }
+    // Determine and print the winner
+    print_winner(candidates, candidate_count);
 }
 
 // Function to register a vote
 int vote(Candidate candidates[], int candidate_count, char *name) {
-    // Implementation of vote function if needed
-    return 0; // Placeholder return
+    // Check if the candidate name is valid and count the vote
+    for (int i = 0; i < candidate_count; i++) {
+        if (strcmp(candidates[i].name, name) == 0) {
+            candidates[i].votes++;
+            return 1; // Vote was counted
+        }
+    }
+    return 0; // Invalid candidate
+}
+
+// Function to print the winner(s)
+void print_winner(Candidate candidates[], int candidate_count) {
+    int max_votes = 0;
+
+    // Determine the maximum vote count
+    for (int i = 0; i < candidate_count; i++) {
+        if (candidates[i].votes > max_votes) {
+            max_votes = candidates[i].votes;
+        }
+    }
+
+    // Print all candidates with the max vote count
+    printf("\nWinner(s):\n");
+    for (int i = 0; i < candidate_count; i++) {
+        if (candidates[i].votes == max_votes) {
+            printf("%s\n", candidates[i].name);
+        }
+    }
 }
