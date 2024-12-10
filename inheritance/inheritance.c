@@ -1,71 +1,79 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <time.h>
 
-#define MAX_BLOOD_TYPES 16
+// Definição do tipo person
+typedef struct person {
+    struct person *parents[2]; // Dois ponteiros para os pais
+    char alleles[2]; // Dois alelos
+} person;
 
-// Função para gerar tipos sanguíneos possíveis
-void generate_blood_types(const char *parent1, const char *parent2) {
-    char *blood_types[MAX_BLOOD_TYPES];
-    int count = 0;
+// Funções
+person *create_family(int generations);
+void free_family(person *p);
+void print_family(person *p, int generation);
 
-    // Gerar combinações possíveis
-    for (int i = 0; i < strlen(parent1); i++) {
-        for (int j = 0; j < strlen(parent2); j++) {
-            char combination[3];
-            combination[0] = parent1[i];
-            combination[1] = parent2[j];
-            combination[2] = '\0';
+int main(void) {
+    // Semeia o gerador de números aleatórios
+    srand(time(0));
 
-            // Verifica se já existe
-            int exists = 0;
-            for (int k = 0; k < count; k++) {
-                if (strcmp(blood_types[k], combination) == 0) {
-                    exists = 1;
-                    break;
-                }
-            }
+    // Cria uma nova família com três gerações
+    person *p = create_family(3);
 
-            // Se não existe, adiciona à lista
-            if (!exists) {
-                blood_types[count] = malloc(3 * sizeof(char)); // Aloca memória para a nova combinação
-                if (blood_types[count] != NULL) {
-                    strcpy(blood_types[count], combination); // Copia a combinação
-                    count++;
-                }
-            }
+    // Imprime a árvore genealógica dos tipos sanguíneos
+    print_family(p, 0);
 
-            // Inverte a ordem
-            combination[1] = parent2[(j + 1) % 2]; // Troca para o segundo alelo
-            if (!exists) {
-                blood_types[count] = malloc(3 * sizeof(char));
-                if (blood_types[count] != NULL) {
-                    strcpy(blood_types[count], combination);
-                    count++;
-                }
-            }
-        }
-    }
-
-    // Exibir resultados
-    printf("Possíveis tipos sanguíneos dos filhos:\n");
-    for (int i = 0; i < count; i++) {
-        printf("%s\n", blood_types[i]);
-        free(blood_types[i]); // Libera a memória alocada
-    }
-}
-
-int main() {
-    char parent1[3], parent2[3];
-
-    // Entrada dos tipos sanguíneos dos pais
-    printf("Digite o tipo sanguíneo do primeiro pai (ex: AO, BO, AB): ");
-    scanf("%2s", parent1);
-    printf("Digite o tipo sanguíneo do segundo pai (ex: AO, BO, AB): ");
-    scanf("%2s", parent2);
-
-    // Gerar e exibir os tipos sanguíneos possíveis
-    generate_blood_types(parent1, parent2);
+    // Libera a memória
+    free_family(p);
 
     return 0; // Indica sucesso
+}
+
+person *create_family(int generations) {
+    // Aloca memória para uma nova pessoa
+    person *p = malloc(sizeof(person));
+    if (p == NULL) {
+        return NULL; // Retorna NULL se a alocação falhar
+    }
+
+    // Se não existem mais gerações, define alelos aleatórios
+    if (generations > 0) {
+        // Chama recursivamente para criar os pais
+        p->parents[0] = create_family(generations - 1);
+        p->parents[1] = create_family(generations - 1);
+
+        // Define alelos aleatórios
+        p->alleles[0] = "ABO"[rand() % 3]; // Alelos podem ser 'A', 'B' ou 'O'
+        p->alleles[1] = "ABO"[rand() % 3]; // Alelos podem ser 'A', 'B' ou 'O'
+    } else {
+        // Se não houver mais gerações, define alelos como 'O' por padrão
+        p->alleles[0] = 'O';
+        p->alleles[1] = 'O';
+        p->parents[0] = NULL; // Sem pais
+        p->parents[1] = NULL; // Sem pais
+    }
+
+    return p; // Retorna o ponteiro para a nova pessoa
+}
+
+void free_family(person *p) {
+    if (p == NULL) return; // Verifica se o ponteiro é NULL
+
+    // Chama recursivamente a função para liberar os pais
+    free_family(p->parents[0]);
+    free_family(p->parents[1]);
+
+    // Libera a memória da pessoa atual
+    free(p);
+}
+
+void print_family(person *p, int generation) {
+    if (p == NULL) return; // Verifica se o ponteiro é NULL
+
+    // Imprime os alelos da pessoa atual
+    printf("Geração %d: Tipo sanguíneo: %c%c\n", generation, p->alleles[0], p->alleles[1]);
+
+    // Chama recursivamente para imprimir os pais
+    print_family(p->parents[0], generation + 1);
+    print_family(p->parents[1], generation + 1);
 }
