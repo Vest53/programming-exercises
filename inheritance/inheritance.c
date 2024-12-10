@@ -12,7 +12,7 @@ typedef struct person {
 person *create_family(int generations);
 void free_family(person *p);
 void print_family(person *p, int generation);
-int check_size(person *p); // Nova função para verificar o tamanho
+int check_size(person *p); // Definição única da função
 
 int main(void) {
     // Semeia o gerador de números aleatórios
@@ -25,7 +25,7 @@ int main(void) {
     print_family(p, 0);
 
     // Verifica o tamanho da família
-    printf(check_size(p) == 7 ? "size_true\n" : "size_false\n");
+    printf(check_size(p) == 7 ? "size_true\n" : "size_false\n"); // 7 para 3 gerações
 
     // Libera a memória
     free_family(p);
