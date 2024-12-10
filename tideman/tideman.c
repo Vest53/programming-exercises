@@ -2,15 +2,14 @@
 #include <string.h>
 
 #define MAX_CANDIDATES 9
+#define MAX_NAME_LENGTH 50
 
 // Estruturas
-typedef struct
-{
-    char name[50];
+typedef struct {
+    char name[MAX_NAME_LENGTH];
 } Candidate;
 
-typedef struct
-{
+typedef struct {
     int winner;
     int loser;
 } Pair;
@@ -31,16 +30,14 @@ void lock_pairs();
 int is_cycle(int winner, int loser);
 void print_winner(int candidate_count);
 
-int main()
-{
+int main() {
     // Leitura do número de candidatos
     int candidate_count;
     printf("Informe o número de candidatos: ");
     scanf("%d", &candidate_count);
 
     // Leitura dos nomes dos candidatos
-    for (int i = 0; i < candidate_count; i++)
-    {
+    for (int i = 0; i < candidate_count; i++) {
         printf("Nome do candidato %d: ", i + 1);
         scanf("%s", candidates[i].name);
     }
@@ -49,8 +46,7 @@ int main()
     int voter_count;
     printf("Informe o número de eleitores: ");
     scanf("%d", &voter_count);
-    for (int i = 0; i < voter_count; i++)
-    {
+    for (int i = 0; i < voter_count; i++) {
         int ranks[MAX_CANDIDATES];
         vote(ranks, candidate_count);
         record_preferences(ranks, candidate_count);
@@ -67,39 +63,29 @@ int main()
 }
 
 // Função para registrar os votos
-void vote(int ranks[], int candidate_count)
-{
+void vote(int ranks[], int candidate_count) {
     // Exemplo de implementação para coletar votos
-    for (int i = 0; i < candidate_count; i++)
-    {
+    for (int i = 0; i < candidate_count; i++) {
         printf("Classifique o candidato %d (0 a %d): ", i + 1, candidate_count - 1);
         scanf("%d", &ranks[i]);
     }
 }
 
 // Função para registrar as preferências
-void record_preferences(int ranks[], int candidate_count)
-{
-    for (int i = 0; i < candidate_count; i++)
-    {
-        for (int j = i + 1; j < candidate_count; j++)
-        {
+void record_preferences(int ranks[], int candidate_count) {
+    for (int i = 0; i < candidate_count; i++) {
+        for (int j = i + 1; j < candidate_count; j++) {
             preferences[ranks[i]][ranks[j]]++;
         }
     }
 }
 
 // Função para adicionar pares
-void add_pairs(int candidate_count)
-{
-    for (int i = 0; i < candidate_count; i++)
-    {
-        for (int j = 0; j < candidate_count; j++)
-        {
-            if (i != j)
-            {
-                if (preferences[i][j] > preferences[j][i])
-                {
+void add_pairs(int candidate_count) {
+    for (int i = 0; i < candidate_count; i++) {
+        for (int j = 0; j < candidate_count; j++) {
+            if (i != j) {
+                if (preferences[i][j] > preferences[j][i]) {
                     pairs[pair_count].winner = i;
                     pairs[pair_count].loser = j;
                     pair_count++;
@@ -110,32 +96,26 @@ void add_pairs(int candidate_count)
 }
 
 // Função para ordenar pares
-void sort_pairs()
-{
+void sort_pairs() {
     // Implementar ordenação baseada na força dos pares
 }
 
 // Função para bloquear pares
-void lock_pairs()
-{
-    for (int i = 0; i < pair_count; i++)
-    {
-        if (!is_cycle(pairs[i].winner, pairs[i].loser))
-        {
+void lock_pairs() {
+    for (int i = 0; i < pair_count; i++) {
+        if (!is_cycle(pairs[i].winner, pairs[i].loser)) {
             locked[pairs[i].winner][pairs[i].loser] = 1;
         }
     }
 }
 
 // Função para verificar ciclos
-int is_cycle(int winner, int loser)
-{
+int is_cycle(int winner, int loser) {
     // Implementar lógica para detectar ciclos
     return 0; // Placeholder
 }
 
 // Função para imprimir o vencedor
-void print_winner(int candidate_count)
-{
+void print_winner(int candidate_count) {
     // Implementar lógica para encontrar e imprimir o vencedor
 }
