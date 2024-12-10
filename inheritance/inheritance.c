@@ -12,13 +12,11 @@ void generate_blood_types(const char *parent1, const char *parent2) {
     // Gerar combinações possíveis
     for (int i = 0; i < strlen(parent1); i++) {
         for (int j = 0; j < strlen(parent2); j++) {
-            char type1[3] = {parent1[i], parent1[(i + 1) % 2], '\0'};
-            char type2[3] = {parent2[j], parent2[(j + 1) % 2], '\0'};
             char combination[3];
 
             // Combinações do primeiro e segundo alelo
-            combination[0] = type1[0];
-            combination[1] = type2[0];
+            combination[0] = parent1[i];
+            combination[1] = parent2[j];
             combination[2] = '\0';
 
             // Verifica se já existe
@@ -30,26 +28,21 @@ void generate_blood_types(const char *parent1, const char *parent2) {
                 }
             }
             if (!exists) {
-                blood_types[count++] = strdup(combination);
+                blood_types[count] = malloc(3 * sizeof(char)); // Aloca memória para a nova combinação
+                if (blood_types[count] != NULL) {
+                    strcpy(blood_types[count], combination); // Copia a combinação
+                    count++;
+                }
             }
 
             // Inverte a ordem
-            combination[0] = type1[0];
-            combination[1] = type2[1];
+            combination[1] = parent2[(j + 1) % 2];
             if (!exists) {
-                blood_types[count++] = strdup(combination);
-            }
-
-            combination[0] = type1[1];
-            combination[1] = type2[0];
-            if (!exists) {
-                blood_types[count++] = strdup(combination);
-            }
-
-            combination[0] = type1[1];
-            combination[1] = type2[1];
-            if (!exists) {
-                blood_types[count++] = strdup(combination);
+                blood_types[count] = malloc(3 * sizeof(char));
+                if (blood_types[count] != NULL) {
+                    strcpy(blood_types[count], combination);
+                    count++;
+                }
             }
         }
     }
