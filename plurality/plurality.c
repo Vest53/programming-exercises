@@ -1,112 +1,86 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_CANDIDATES 9
+#define MAX_CANDIDATES 100
 #define MAX_NAME_LENGTH 50
 
-// Define a estrutura do Candidato
+// Define the Candidate structure
 typedef struct
 {
     char name[MAX_NAME_LENGTH];
     int votes;
 } Candidate;
 
-// Prototipagem das funções
-int vote(Candidate candidates[], int candidate_count, char *name);
-void print_winner(Candidate candidates[], int candidate_count);
+// Function to run the election
+void run_election(Candidate candidates[], int candidate_count, int voter_count);
 
 int main()
 {
+    // Declare an array of candidates
     Candidate candidates[MAX_CANDIDATES];
-    int candidate_count;
 
-    // Solicita o número de candidatos
-    printf("Informe o número de candidatos (até %d): ", MAX_CANDIDATES);
-    if (scanf("%d", &candidate_count) != 1 || candidate_count < 1 ||
-        candidate_count > MAX_CANDIDATES)
-    {
-        printf("Número inválido de candidatos.\n");
-        return 1;
-    }
+    // Initialize the number of candidates
+    int candidate_count = 3;
 
-    // Inicializa os candidatos
-    for (int i = 0; i < candidate_count; i++)
-    {
-        printf("Informe o nome do candidato %d: ", i + 1);
-        scanf("%49s", candidates[i].name); // Limita a entrada
-        candidates[i].votes = 0;
-    }
+    // Initialize candidates
+    strcpy(candidates[0].name, "Alice");
+    candidates[0].votes = 0;
 
-    int voter_count;
-    printf("Informe o número de eleitores: ");
-    if (scanf("%d", &voter_count) != 1)
-    {
-        printf("Número inválido de eleitores.\n");
-        return 1;
-    }
+    strcpy(candidates[1].name, "Bob");
+    candidates[1].votes = 0;
 
-    // Votação
-    for (int i = 0; i < voter_count; i++)
-    {
-        char name[MAX_NAME_LENGTH];
-        printf("Informe o nome do candidato para votar: ");
-        scanf("%49s", name); // Limita a entrada
+    strcpy(candidates[2].name, "Charlie");
+    candidates[2].votes = 0;
 
-        if (!vote(candidates, candidate_count, name))
-        {
-            printf("Voto inválido para %s.\n", name);
-        }
-    }
+    // Simulate a fixed number of voters
+    int voter_count = 5;
 
-    // Mostra os resultados
-    printf("\nResultados da eleição:\n");
-    for (int i = 0; i < candidate_count; i++)
-    {
-        printf("%s: %d votos\n", candidates[i].name, candidates[i].votes);
-    }
-
-    // Imprime o vencedor
-    print_winner(candidates, candidate_count);
+    // Call the function to run the election
+    run_election(candidates, candidate_count, voter_count);
 
     return 0;
 }
 
-// Função para registrar um voto
-int vote(Candidate candidates[], int candidate_count, char *name)
+// Function to run the election
+void run_election(Candidate candidates[], int candidate_count, int voter_count)
 {
-    for (int i = 0; i < candidate_count; i++)
+    // Simulated votes
+    char *votes[] = {"Alice", "Bob", "Alice", "Charlie", "Alice"};
+
+    // Count the votes
+    for (int i = 0; i < voter_count; i++)
     {
-        if (strcmp(candidates[i].name, name) == 0)
+        for (int j = 0; j < candidate_count; j++)
         {
-            candidates[i].votes++;
-            return 1; // Voto válido
+            if (strcmp(votes[i], candidates[j].name) == 0)
+            {
+                candidates[j].votes++;
+                break;
+            }
         }
     }
-    return 0; // Candidato inválido
-}
 
-// Função para imprimir o(s) vencedor(es)
-void print_winner(Candidate candidates[], int candidate_count)
-{
+    // Display results
+    printf("\nElection Results:\n");
+    for (int i = 0; i < candidate_count; i++)
+    {
+        printf("%s: %d votes\n", candidates[i].name, candidates[i].votes);
+    }
+
+    // Determine winner
     int max_votes = 0;
-
-    // Encontra o número máximo de votos
+    int winner_index = -1;
     for (int i = 0; i < candidate_count; i++)
     {
         if (candidates[i].votes > max_votes)
         {
             max_votes = candidates[i].votes;
+            winner_index = i;
         }
     }
 
-    // Imprime todos os candidatos com votos máximos
-    printf("Vencedor(es):\n");
-    for (int i = 0; i < candidate_count; i++)style50 plurality.c
-
+    if (winner_index != -1)
     {
-        if (candidates[i].votes == max_votes)
-        {
-            printf("%s\n", candidates[i].name);
-        }
+        printf("\nThe winner is: %s with %d votes.\n", candidates[winner_index].name, max_votes);
     }
 }
