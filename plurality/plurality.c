@@ -101,7 +101,8 @@ void print_winner(Candidate candidates[], int candidate_count)
 
     // Imprime todos os candidatos com votos máximos
     printf("Vencedor(es):\n");
-    for (int i = 0; i < candidate_count; i++)
+    for (int i = 0; i < candidate_count; i++)style50 plurality.c
+
     {
         if (candidates[i].votes == max_votes)
         {
