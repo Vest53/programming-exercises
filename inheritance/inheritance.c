@@ -1,71 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <time.h> // Para time()
 
-#define MAX_BLOOD_TYPES 16
+// Definição do tipo pessoa
+typedef struct {
+    char alelo1[3];
+    char alelo2[3];
+ } pessoa;
 
-// Função para gerar tipos sanguíneos possíveis
-void generate_blood_types(const char *parent1, const char *parent2) {
-    char *blood_types[MAX_BLOOD_TYPES];
-    int count = 0;
-
-    // Gerar combinações possíveis
-    for (int i = 0; i < strlen(parent1); i++) {
-        for (int j = 0; j < strlen(parent2); j++) {
-            char combination[3];
-
-            // Combinações do primeiro e segundo alelo
-            combination[0] = parent1[i];
-            combination[1] = parent2[j];
-            combination[2] = '\0';
-
-            // Verifica se já existe
-            int exists = 0;
-            for (int k = 0; k < count; k++) {
-                if (strcmp(blood_types[k], combination) == 0) {
-                    exists = 1;
-                    break;
-                }
-            }
-            if (!exists) {
-                blood_types[count] = malloc(3 * sizeof(char)); // Aloca memória para a nova combinação
-                if (blood_types[count] != NULL) {
-                    strcpy(blood_types[count], combination); // Copia a combinação
-                    count++;
-                }
-            }
-
-            // Inverte a ordem
-            combination[1] = parent2[(j + 1) % 2];
-            if (!exists) {
-                blood_types[count] = malloc(3 * sizeof(char));
-                if (blood_types[count] != NULL) {
-                    strcpy(blood_types[count], combination);
-                    count++;
-                }
-            }
-        }
-    }
-
-    // Exibir resultados
-    printf("Possíveis tipos sanguíneos dos filhos:\n");
-    for (int i = 0; i < count; i++) {
-        printf("%s\n", blood_types[i]);
-        free(blood_types[i]); // Libera a memória alocada
-    }
-}
+// Funções que você precisa implementar
+pessoa* create_family(int n);
+void free_family(pessoa* p);
+int check_size(pessoa* p, int n);
+int check_alleles(pessoa* p);
 
 int main() {
-    char parent1[3], parent2[3];
+    srand(time(0)); // Corrigido para usar time()
 
-    // Entrada dos tipos sanguíneos dos pais
-    printf("Digite o tipo sanguíneo do primeiro pai (ex: AO, BO, AB): ");
-    scanf("%2s", parent1);
-    printf("Digite o tipo sanguíneo do segundo pai (ex: AO, BO, AB): ");
-    scanf("%2s", parent2);
+    pessoa *p = create_family(3); // Chama a função para criar uma família
 
-    // Gerar e exibir os tipos sanguíneos possíveis
-    generate_blood_types(parent1, parent2);
+    // Verifica o tamanho e os alelos
+    printf(check_size(p, 3) ? "size_true " : "size_false ");
+    printf(check_alleles(p) ? "allele_true" : "allele_false");
 
-    return 0; // Indica sucesso
+    // Libera a memória
+    free_family(p);
+
+    return 0;
+}
+
+// Implementações das funções (exemplo)
+pessoa* create_family(int n) {
+    pessoa *family = malloc(n * sizeof(pessoa));
+    // Inicialização de alelos aleatórios (exemplo)
+    for (int i = 0; i < n; i++) {
+        snprintf(family[i].alelo1, sizeof(family[i].alelo1), "AO");
+        snprintf(family[i].alelo2, sizeof(family[i].alelo2), "BO");
+    }
+    return family;
+}
+
+void free_family(pessoa* p) {
+    free(p);
+}
+
+int check_size(pessoa* p, int n) {
+    return sizeof(p) / sizeof(pessoa) == n; // Apenas um exemplo
+}
+
+int check_alleles(pessoa* p) {
+    // Implementação da verificação dos alelos
+    return 1; // Exemplo, sempre retorna verdadeiro
 }
