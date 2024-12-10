@@ -1,56 +1,75 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string.h>
 
-typedef struct pessoa {
-    char alelos[2][3]; // Dois alelos, cada um com até 2 caracteres + '\0'
-    struct pessoa *pais[2]; // Ponteiros para os pais
-} pessoa;
+// Definição da estrutura person
+typedef struct person {
+    struct person *parents[2];
+    char alleles[2];
+} person;
 
-// Funções que você precisa implementar
-pessoa* create_family(int n);
-void free_family(pessoa* p);
-int check_size(pessoa* p, int n);
-int check_alleles(pessoa* p);
+// Funções
+person *create_family(int generations);
+void free_family(person *p);
+void print_family(person *p, int generation);
+int check_size(person *p); // Apenas uma versão da função
 
-int main() {
-    srand(time(0)); // Inicializa o gerador de números aleatórios
+int main(void) {
+    // Semeia o gerador de números aleatórios
+    srand(time(0));
 
-    pessoa *p = create_family(3); // Cria uma família
+    // Cria uma nova família com três gerações
+    person *p = create_family(3);
 
-    // Verifica o tamanho e os alelos
-    printf(check_size(p, 3) ? "size_true " : "size_false ");
-    printf(check_alleles(p) ? "allele_true" : "allele_false");
+    // Imprime a árvore genealógica dos tipos sanguíneos
+    print_family(p, 0);
+
+    // Verifica o tamanho da família
+    printf(check_size(p) == 7 ? "size_true\n" : "size_false\n"); // 7 para 3 gerações
 
     // Libera a memória
     free_family(p);
 
-    return 0;
+    return 0; // Indica sucesso
 }
 
-// Implementações das funções
-pessoa* create_family(int n) {
-    pessoa *family = malloc(n * sizeof(pessoa));
-    for (int i = 0; i < n; i++) {
-        snprintf(family[i].alelos[0], sizeof(family[i].alelos[0]), "AO");
-        snprintf(family[i].alelos[1], sizeof(family[i].alelos[1]), "BO");
-        family[i].pais[0] = NULL; // Inicializa pais como NULL
-        family[i].pais[1] = NULL; // Inicializa pais como NULL
+person *create_family(int generations) {
+    person *p = malloc(sizeof(person));
+    if (p == NULL) {
+        return NULL; // Retorna NULL se a alocação falhar
     }
-    return family;
+
+    if (generations > 0) {
+        p->parents[0] = create_family(generations - 1);
+        p->parents[1] = create_family(generations - 1);
+        p->alleles[0] = p->parents[0]->alleles[rand() % 2];
+        p->alleles[1] = p->parents[1]->alleles[rand() % 2];
+    } else {
+        p->alleles[0] = "ABO"[rand() % 3];
+        p->alleles[1] = "ABO"[rand() % 3];
+        p->parents[0] = NULL;
+        p->parents[1] = NULL;
+    }
+
+    return p;
 }
 
-void free_family(pessoa* p) {
+void free_family(person *p) {
+    if (p == NULL) return;
+    free_family(p->parents[0]);
+    free_family(p->parents[1]);
     free(p);
 }
 
-int check_size(pessoa* p, int n) {
-    // Como o tamanho não é armazenado, você pode usar um parâmetro fixo ou um método diferente
-    return 1; // Apenas um exemplo, sempre retorna verdadeiro
+void print_family(person *p, int generation) {
+    if (p == NULL) return;
+    printf("Geração %d: Tipo sanguíneo: %c%c\n", generation, p->alleles[0], p->alleles[1]);
+    print_family(p->parents[0], generation + 1);
+    print_family(p->parents[1], generation + 1);
 }
 
-int check_alleles(pessoa* p) {
-    // Implementação da verificação dos alelos
-    return 1; // Exemplo, sempre retorna verdadeiro
+int check_size(person *p) {
+    if (p == NULL) return 0; // Se não houver pessoa, retorna 0
+    // Conta a pessoa atual e soma os pais
+    return 1 + check_size(p->parents[0]) + check_size(p->parents[1]);
 }
