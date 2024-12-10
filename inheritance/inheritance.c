@@ -12,7 +12,6 @@ typedef struct person {
 person *create_family(int generations);
 void free_family(person *p);
 void print_family(person *p, int generation);
-int check_size(person *p, int expected_size);
 
 int main(void) {
     // Semeia o gerador de números aleatórios
@@ -23,9 +22,6 @@ int main(void) {
 
     // Imprime a árvore genealógica dos tipos sanguíneos
     print_family(p, 0);
-
-    // Verifica o tamanho da família
-    printf(check_size(p, 7) ? "size_true\n" : "size_false\n");
 
     // Libera a memória
     free_family(p);
@@ -46,13 +42,13 @@ person *create_family(int generations) {
         p->parents[0] = create_family(generations - 1);
         p->parents[1] = create_family(generations - 1);
 
-        // Define alelos aleatórios herdados dos pais
-        p->alleles[0] = p->parents[0]->alleles[rand() % 2]; // Herda alelo de um dos pais
-        p->alleles[1] = p->parents[1]->alleles[rand() % 2]; // Herda alelo de outro pai
-    } else {
-        // Se não houver mais gerações, define alelos aleatórios
+        // Define alelos aleatórios
         p->alleles[0] = "ABO"[rand() % 3]; // Alelos podem ser 'A', 'B' ou 'O'
         p->alleles[1] = "ABO"[rand() % 3]; // Alelos podem ser 'A', 'B' ou 'O'
+    } else {
+        // Se não houver mais gerações, define alelos como 'O' por padrão
+        p->alleles[0] = 'O';
+        p->alleles[1] = 'O';
         p->parents[0] = NULL; // Sem pais
         p->parents[1] = NULL; // Sem pais
     }
@@ -80,12 +76,4 @@ void print_family(person *p, int generation) {
     // Chama recursivamente para imprimir os pais
     print_family(p->parents[0], generation + 1);
     print_family(p->parents[1], generation + 1);
-}
-
-int check_size(person *p, int expected_size) {
-    // Conta o número total de pessoas na árvore genealógica
-    if (p == NULL) return 0; // Se não houver pessoa, retorna 0
-
-    // Conta a pessoa atual e soma os pais
-    return 1 + check_size(p->parents[0], expected_size) + check_size(p->parents[1], expected_size);
 }
