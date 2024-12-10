@@ -6,7 +6,7 @@
 typedef struct {
     char alelo1[3];
     char alelo2[3];
-} pessoa;
+ pessoa; }
 
 // Funções que você precisa implementar
 pessoa* create_family(int n);
