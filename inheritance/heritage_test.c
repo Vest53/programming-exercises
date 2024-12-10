@@ -12,6 +12,7 @@ typedef struct person {
 person *create_family(int generations);
 void free_family(person *p);
 void print_family(person *p, int generation);
+int check_size(person *p); // Apenas uma versão da função
 
 int main(void) {
     // Semeia o gerador de números aleatórios
@@ -67,3 +68,8 @@ void print_family(person *p, int generation) {
     print_family(p->parents[1], generation + 1);
 }
 
+int check_size(person *p) {
+    if (p == NULL) return 0; // Se não houver pessoa, retorna 0
+    // Conta a pessoa atual e soma os pais
+    return 1 + check_size(p->parents[0]) + check_size(p->parents[1]);
+}
