@@ -1,57 +1,21 @@
-// Implements a dictionary's functionality
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "dictionary.h"
 
+#define LENGTH 45 // Máximo de caracteres em uma palavra
 #define N 26 // Número de buckets
 
-node *table[N]; // Tabela hash
-unsigned int word_count = 0; // Contador de palavras
-
-
-// Represents a node in a hash table
-typedef struct node
-{
+typedef struct node {
     char word[LENGTH + 1];
     struct node *next;
 } node;
 
-// TODO: Choose number of buckets in hash table
-const unsigned int N = 26;
+node *table[N]; // Tabela hash
+unsigned int word_count = 0; // Contador de palavras
 
-// Hash table
-node *table[N];
-
-// Returns true if word is in dictionary, else false
-bool check(const char *word)
-{
- bool check(const char *word) {
-    unsigned int index = hash(word);
-    node *cursor = table[index];
-
-    while (cursor != NULL) {
-        if (strcasecmp(cursor->word, word) == 0) {
-            return true; // Palavra encontrada
-        }
-        cursor = cursor->next;
-    }
-    return false; // Palavra não encontrada
-}
-}
-
-// Hashes word to a number
-unsigned int hash(const char *word)
-{
-  unsigned int hash(const char *word) {
-    return tolower(word[0]) - 'a'; // Simples hash baseado na primeira letra
-}
-}
-
-// Loads dictionary into memory, returning true if successful, else false
-bool load(const char *dictionary)
-{
+bool load(const char *dictionary) {
     FILE *file = fopen(dictionary, "r");
     if (file == NULL) {
         return false; // Retorna falso se o arquivo não puder ser aberto
@@ -75,18 +39,23 @@ bool load(const char *dictionary)
     return true; // Retorna verdadeiro se carregado com sucesso
 }
 
+bool check(const char *word) {
+    unsigned int index = hash(word);
+    node *cursor = table[index];
 
-// Returns number of words in dictionary if loaded, else 0 if not yet loaded
-unsigned int size(void)
-{
-  unsigned int size(void) {
+    while (cursor != NULL) {
+        if (strcasecmp(cursor->word, word) == 0) {
+            return true; // Palavra encontrada
+        }
+        cursor = cursor->next;
+    }
+    return false; // Palavra não encontrada
+}
+
+unsigned int size(void) {
     return word_count; // Retorna a contagem de palavras
 }
-}
 
-// Unloads dictionary from memory, returning true if successful, else false
-bool unload(void)
-{
 bool unload(void) {
     for (int i = 0; i < N; i++) {
         node *cursor = table[i];
@@ -98,4 +67,7 @@ bool unload(void) {
     }
     return true; // Retorna verdadeiro após liberar toda a memória
 }
+
+unsigned int hash(const char *word) {
+    return tolower(word[0]) - 'a'; // Simples hash baseado na primeira letra
 }
