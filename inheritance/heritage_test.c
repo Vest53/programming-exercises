@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "inheritance.h" // Inclua o cabeçalho correto
+#include "inheritance.c" // Inclua o cabeçalho correto
 
 // Testes
 int main() {
