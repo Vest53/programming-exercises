@@ -12,7 +12,7 @@ typedef struct person {
 person *create_family(int generations);
 void free_family(person *p);
 void print_family(person *p, int generation);
-int check_size(person *p); // Para verificar o tamanho da árvore
+int check_size(person *p, int n); // Para verificar o tamanho da árvore
 
 int main(void) {
     // Semeia o gerador de números aleatórios
