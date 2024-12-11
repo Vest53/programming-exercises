@@ -1,6 +1,8 @@
 // heritage_test.c
 
 #include <stdio.h>
+#include <stdlib.h> // Necessário para srand e rand
+#include <time.h>   // Necessário para time
 #include "heritage.h" // Inclua o cabeçalho
 
 // Testes
