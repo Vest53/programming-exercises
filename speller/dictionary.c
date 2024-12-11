@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <strings.h>
 #include "dictionary.h"
 
 #define LENGTH 45 // Máximo de caracteres em uma palavra
