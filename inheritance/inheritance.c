@@ -1,42 +1,14 @@
+// heritage.c
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-// Definição do tipo person
-typedef struct person {
-    struct person *parents[2]; // Dois ponteiros para os pais
-    char alleles[2]; // Dois alelos
-} person;
-
-// Funções
-person *create_family(int generations);
-void free_family(person *p);
-void print_family(person *p, int generation);
-int check_size(person *p, int n); // Definição com dois parâmetros
-
-int main(void) {
-    // Semeia o gerador de números aleatórios
-    srand(time(0));
-
-    // Cria uma nova família com três gerações
-    person *p = create_family(3);
-
-    // Imprime a árvore genealógica dos tipos sanguíneos
-    print_family(p, 0);
-
-    // Verifica o tamanho da família
-    printf(check_size(p, 3) == 7 ? "size_true\n" : "size_false\n"); // 7 para 3 gerações
-
-    // Libera a memória
-    free_family(p);
-
-    return 0; // Indica sucesso
-}
+#include "heritage.h" // Inclua o cabeçalho
 
 person *create_family(int generations) {
     person *new_person = malloc(sizeof(person));
     if (new_person == NULL) {
-        return NULL; // Retorna NULL se a alocação falhar
+        return NULL;
     }
 
     if (generations > 1) {
@@ -50,15 +22,11 @@ person *create_family(int generations) {
         new_person->alleles[0] = "ABO"[rand() % 3];
         new_person->alleles[1] = "ABO"[rand() % 3];
     }
-
-    return new_person; // Retorna o novo ponteiro de pessoa
+    return new_person;
 }
 
 void free_family(person *p) {
-    if (p == NULL) {
-        return;
-    }
-
+    if (p == NULL) return;
     free_family(p->parents[0]);
     free_family(p->parents[1]);
     free(p);
@@ -66,13 +34,21 @@ void free_family(person *p) {
 
 void print_family(person *p, int generation) {
     if (p == NULL) return;
-
     printf("Geração %d: Tipo sanguíneo: %c%c\n", generation, p->alleles[0], p->alleles[1]);
     print_family(p->parents[0], generation + 1);
     print_family(p->parents[1], generation + 1);
 }
 
 int check_size(person *p, int n) {
-    if (p == NULL) return 0; // Se não houver pessoa, retorna 0
-    return 1 + check_size(p->parents[0], n - 1) + check_size(p->parents[1], n - 1);
+    if (p == NULL) return 0;
+    return 1 + check_size(p->parents[0], n) + check_size(p->parents[1], n);
+}
+
+int main(void) {
+    srand(time(0));
+    person *p = create_family(3);
+    print_family(p, 0);
+    printf(check_size(p, 3) == 7 ? "size_true\n" : "size_false\n"); // 7 para 3 gerações
+    free_family(p);
+    return 0;
 }
