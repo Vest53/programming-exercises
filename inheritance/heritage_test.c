@@ -1,75 +1,11 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "inheritance.h" // Inclua o cabeçalho correto
 
-// Definição da estrutura person
-typedef struct person {
-    struct person *parents[2];
-    char alleles[2];
-} person;
-
-// Funções
-person *create_family(int generations);
-void free_family(person *p);
-void print_family(person *p, int generation);
-int check_size(person *p); // Apenas uma versão da função
-
-int main(void) {
-    // Semeia o gerador de números aleatórios
-    srand(time(0));
-
-    // Cria uma nova família com três gerações
+// Testes
+int main() {
+    // Criar uma família e verificar o tamanho
     person *p = create_family(3);
-
-    // Imprime a árvore genealógica dos tipos sanguíneos
-    print_family(p, 0);
-
-    // Verifica o tamanho da família
-    printf(check_size(p) == 7 ? "size_true\n" : "size_false\n"); // 7 para 3 gerações
-
-    // Libera a memória
-    free_family(p);
-
-    return 0; // Indica sucesso
-}
-
-person *create_family(int generations) {
-    person *p = malloc(sizeof(person));
-    if (p == NULL) {
-        return NULL; // Retorna NULL se a alocação falhar
-    }
-
-    if (generations > 0) {
-        p->parents[0] = create_family(generations - 1);
-        p->parents[1] = create_family(generations - 1);
-        p->alleles[0] = p->parents[0]->alleles[rand() % 2];
-        p->alleles[1] = p->parents[1]->alleles[rand() % 2];
-    } else {
-        p->alleles[0] = "ABO"[rand() % 3];
-        p->alleles[1] = "ABO"[rand() % 3];
-        p->parents[0] = NULL;
-        p->parents[1] = NULL;
-    }
-
-    return p;
-}
-
-void free_family(person *p) {
-    if (p == NULL) return;
-    free_family(p->parents[0]);
-    free_family(p->parents[1]);
-    free(p);
-}
-
-void print_family(person *p, int generation) {
-    if (p == NULL) return;
-    printf("Geração %d: Tipo sanguíneo: %c%c\n", generation, p->alleles[0], p->alleles[1]);
-    print_family(p->parents[0], generation + 1);
-    print_family(p->parents[1], generation + 1);
-}
-
-int check_size(person *p) {
-    if (p == NULL) return 0; // Se não houver pessoa, retorna 0
-    // Conta a pessoa atual e soma os pais
-    return 1 + check_size(p->parents[0]) + check_size(p->parents[1]);
+    printf(check_size(p, 3) == 7 ? "size_true\n" : "size_false\n"); // 7 para 3 gerações
+    free_family(p); // Libera a memória
+    return 0;
 }
