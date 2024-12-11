@@ -2,17 +2,17 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Definição da estrutura person
+// Definição do tipo person
 typedef struct person {
-    struct person *parents[2];
-    char alleles[2];
+    struct person *parents[2]; // Dois ponteiros para os pais
+    char alleles[2]; // Dois alelos
 } person;
 
 // Funções
 person *create_family(int generations);
 void free_family(person *p);
 void print_family(person *p, int generation);
-int check_size(person *p); // Apenas uma versão da função
+int check_size(person *p); // Para verificar o tamanho da árvore
 
 int main(void) {
     // Semeia o gerador de números aleatórios
@@ -34,28 +34,31 @@ int main(void) {
 }
 
 person *create_family(int generations) {
-    person *p = malloc(sizeof(person));
-    if (p == NULL) {
-        return NULL; // Retorna NULL se a alocação falhar
+    person *new_person = malloc(sizeof(person));
+    if (new_person == NULL) {
+        return NULL;
     }
 
-    if (generations > 0) {
-        p->parents[0] = create_family(generations - 1);
-        p->parents[1] = create_family(generations - 1);
-        p->alleles[0] = p->parents[0]->alleles[rand() % 2];
-        p->alleles[1] = p->parents[1]->alleles[rand() % 2];
+    if (generations > 1) {
+        new_person->parents[0] = create_family(generations - 1);
+        new_person->parents[1] = create_family(generations - 1);
+        new_person->alleles[0] = new_person->parents[0]->alleles[rand() % 2];
+        new_person->alleles[1] = new_person->parents[1]->alleles[rand() % 2];
     } else {
-        p->alleles[0] = "ABO"[rand() % 3];
-        p->alleles[1] = "ABO"[rand() % 3];
-        p->parents[0] = NULL;
-        p->parents[1] = NULL;
+        new_person->parents[0] = NULL;
+        new_person->parents[1] = NULL;
+        new_person->alleles[0] = "ABO"[rand() % 3];
+        new_person->alleles[1] = "ABO"[rand() % 3];
     }
 
-    return p;
+    return new_person;
 }
 
 void free_family(person *p) {
-    if (p == NULL) return;
+    if (p == NULL) {
+        return;
+    }
+
     free_family(p->parents[0]);
     free_family(p->parents[1]);
     free(p);
@@ -63,13 +66,13 @@ void free_family(person *p) {
 
 void print_family(person *p, int generation) {
     if (p == NULL) return;
+
     printf("Geração %d: Tipo sanguíneo: %c%c\n", generation, p->alleles[0], p->alleles[1]);
     print_family(p->parents[0], generation + 1);
     print_family(p->parents[1], generation + 1);
 }
 
 int check_size(person *p) {
-    if (p == NULL) return 0; // Se não houver pessoa, retorna 0
-    // Conta a pessoa atual e soma os pais
+    if (p == NULL) return 0;
     return 1 + check_size(p->parents[0]) + check_size(p->parents[1]);
 }
