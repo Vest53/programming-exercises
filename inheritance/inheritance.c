@@ -12,7 +12,7 @@ typedef struct person {
 person *create_family(int generations);
 void free_family(person *p);
 void print_family(person *p, int generation);
-int check_size(person *p, int n); // Para verificar o tamanho da árvore
+int check_size(person *p, int n); // Definição com dois parâmetros
 
 int main(void) {
     // Semeia o gerador de números aleatórios
@@ -25,7 +25,7 @@ int main(void) {
     print_family(p, 0);
 
     // Verifica o tamanho da família
-    printf(check_size(p) == 7 ? "size_true\n" : "size_false\n"); // 7 para 3 gerações
+    printf(check_size(p, 3) == 7 ? "size_true\n" : "size_false\n"); // 7 para 3 gerações
 
     // Libera a memória
     free_family(p);
@@ -36,7 +36,7 @@ int main(void) {
 person *create_family(int generations) {
     person *new_person = malloc(sizeof(person));
     if (new_person == NULL) {
-        return NULL;
+        return NULL; // Retorna NULL se a alocação falhar
     }
 
     if (generations > 1) {
@@ -51,7 +51,7 @@ person *create_family(int generations) {
         new_person->alleles[1] = "ABO"[rand() % 3];
     }
 
-    return new_person;
+    return new_person; // Retorna o novo ponteiro de pessoa
 }
 
 void free_family(person *p) {
@@ -72,7 +72,7 @@ void print_family(person *p, int generation) {
     print_family(p->parents[1], generation + 1);
 }
 
-int check_size(person *p) {
-    if (p == NULL) return 0;
-    return 1 + check_size(p->parents[0]) + check_size(p->parents[1]);
+int check_size(person *p, int n) {
+    if (p == NULL) return 0; // Se não houver pessoa, retorna 0
+    return 1 + check_size(p->parents[0], n - 1) + check_size(p->parents[1], n - 1);
 }
