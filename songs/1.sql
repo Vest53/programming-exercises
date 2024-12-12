@@ -1,2 +1,2 @@
-SELECT title
-FROM top_songs;
+SELECT name
+FROM songs;
