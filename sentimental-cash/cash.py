@@ -28,6 +28,7 @@ def main():
     # Imprime o número mínimo de moedas
     print(coins)
 
+
 # Chama a função principal
 if __name__ == "__main__":
     main()
