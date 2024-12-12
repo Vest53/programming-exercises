@@ -2,16 +2,16 @@
 def main():
     while True:
         # Solicita a altura da pirâmide
-        height = input("Digite a altura da pirâmide: ")
+        height = input("Digite a altura da pirâmide (1-8): ")
 
         # Tenta converter a entrada para um inteiro
         try:
             height = int(height)
-            if height < 1:
+            if height < 1 or height > 8:
                 raise ValueError
             break  # Sai do loop se a entrada for válida
         except ValueError:
-            print("Por favor, digite um número inteiro positivo maior que 0.")
+            print("Por favor, digite um número inteiro entre 1 e 8.")
 
     # Loop para cada linha da pirâmide
     for i in range(1, height + 1):
