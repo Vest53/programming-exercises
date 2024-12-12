@@ -1,4 +1,6 @@
 import csv
+import sys
+
 
 def longest_match(sequence, subsequence):
     """Retorna o número máximo de vezes que a subsequência se repete consecutivamente na sequência."""
@@ -16,19 +18,30 @@ def longest_match(sequence, subsequence):
 
     return max_count
 
+
 def load_database(filename):
     """Carrega o banco de dados de perfis de DNA a partir de um arquivo CSV."""
-    with open(filename) as file:
-        reader = csv.DictReader(file)
-        database = []
-        for row in reader:
-            database.append(row)
-    return database
+    try:
+        with open(filename) as file:
+            reader = csv.DictReader(file)
+            database = []
+            for row in reader:
+                database.append(row)
+        return database
+    except FileNotFoundError:
+        print(f"Erro: O arquivo {filename} não foi encontrado.")
+        sys.exit(1)
+
 
 def load_sequence(filename):
     """Carrega a sequência de DNA a partir de um arquivo de texto."""
-    with open(filename) as file:
-        return file.read().strip()
+    try:
+        with open(filename) as file:
+            return file.read().strip()
+    except FileNotFoundError:
+        print(f"Erro: O arquivo {filename} não foi encontrado.")
+        sys.exit(1)
+
 
 def find_matching_profile(database, str_counts):
     """Encontra o perfil correspondente na base de dados."""
@@ -43,10 +56,16 @@ def find_matching_profile(database, str_counts):
             return profile['name']
     return "No match"
 
+
 def main():
+    # Verifique se os argumentos foram passados corretamente
+    if len(sys.argv) != 3:
+        print("Uso: python dna.py <database.csv> <sequence.txt>")
+        sys.exit(1)
+
     # Carregar o banco de dados e a sequência
-    database = load_database("database.csv")
-    sequence = load_sequence("sequence.txt")
+    database = load_database(sys.argv[1])
+    sequence = load_sequence(sys.argv[2])
 
     # Definir os STRs que queremos verificar
     str_names = database[0].keys()
@@ -62,6 +81,7 @@ def main():
 
     # Exibir o resultado
     print(matching_profile)
+
 
 if __name__ == "__main__":
     main()
