@@ -1,3 +1,3 @@
 SELECT title
-FROM top_songs
+FROM songs
 WHERE title LIKE '%feat.%';
