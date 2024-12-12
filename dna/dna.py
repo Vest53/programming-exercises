@@ -1,12 +1,14 @@
 import csv
 
 def longest_match(sequence, subsequence):
+    """Retorna o número máximo de vezes que a subsequência se repete consecutivamente na sequência."""
     max_count = 0
     subseq_length = len(subsequence)
     sequence_length = len(sequence)
 
     for i in range(sequence_length):
         count = 0
+        # Continue contando enquanto a subsequência se repetir
         while sequence[i:i + subseq_length] == subsequence:
             count += 1
             i += subseq_length
@@ -15,6 +17,7 @@ def longest_match(sequence, subsequence):
     return max_count
 
 def load_database(filename):
+    """Carrega o banco de dados de perfis de DNA a partir de um arquivo CSV."""
     with open(filename) as file:
         reader = csv.DictReader(file)
         database = []
@@ -23,13 +26,16 @@ def load_database(filename):
     return database
 
 def load_sequence(filename):
+    """Carrega a sequência de DNA a partir de um arquivo de texto."""
     with open(filename) as file:
         return file.read().strip()
 
 def find_matching_profile(database, str_counts):
+    """Encontra o perfil correspondente na base de dados."""
     for profile in database:
         match = True
         for str_name in str_counts:
+            # Compare inteiros
             if int(profile[str_name]) != str_counts[str_name]:
                 match = False
                 break
