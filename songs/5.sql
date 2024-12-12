@@ -1,2 +1,2 @@
-SELECT AVG(name) AS average_name
+SELECT AVG(energy) AS average_energy
 FROM songs;
