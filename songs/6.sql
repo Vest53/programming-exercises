@@ -1,3 +1,3 @@
-SELECT title
-FROM top_songs
+SELECT name
+FROM songs
 WHERE artist = 'Post Malone';
