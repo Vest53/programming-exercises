@@ -20,6 +20,7 @@ def main():
         # Imprime os hashes
         print("#" * i)  # Imprime os hashes e pula para a próxima linha
 
+
 # Chama a função principal
 if __name__ == "__main__":
     main()
