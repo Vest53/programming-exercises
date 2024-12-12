@@ -1,3 +1,6 @@
+import string
+
+
 def count(text):
     letters = 0
     words = 0
@@ -10,10 +13,10 @@ def count(text):
             letters += 1
 
         # Contar palavras
-        if char.isspace() or char in {'.', '!', '?'}:
+        if char in string.whitespace or char == text[-1]:
             if in_word:
                 words += 1
-                in_word = False
+                in_word = False  # Fim de uma palavra
         else:
             in_word = True  # Dentro de uma palavra
 
@@ -21,11 +24,12 @@ def count(text):
         if char in {'.', '!', '?'}:
             sentences += 1
 
-    # Se o último caractere foi parte de uma palavra, conta
+    # Se o último caractere era parte de uma palavra, contar
     if in_word:
         words += 1
 
     return letters, words, sentences
+
 
 def calculate_grade(letters, words, sentences):
     # Fórmula de Coleman-Liau
@@ -35,14 +39,15 @@ def calculate_grade(letters, words, sentences):
 
     return round(index)  # Arredondar para o inteiro mais próximo
 
+
 def main():
-    # Solicitar ao usuário para inserir texto
+    # Solicitar ao usuário que insira o texto
     text = input("Enter the text: ")
 
     # Contar letras, palavras e sentenças
     letters, words, sentences = count(text)
 
-    # Calcular o grau de legibilidade
+    # Calcular a nota de legibilidade
     grade = calculate_grade(letters, words, sentences)
 
     # Exibir o resultado
@@ -53,6 +58,6 @@ def main():
     else:
         print(f"Grade {grade}")
 
-# Chama a função principal
+
 if __name__ == "__main__":
     main()
