@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-int main() {
+int main()
+{
     char name[100];
-
 
     printf("enter your name: ");
     scanf("%99s", name);
