@@ -1,7 +1,14 @@
 SELECT m.title
 FROM movies m
-JOIN stars s ON m.id = s.movie_id
-JOIN people p ON s.person_id = p.id
-WHERE p.name = 'Chadwick Boseman'
-ORDER BY m.audience_rating DESC  -- Supondo que a audiência é medida por uma coluna chamada audience_rating
-LIMIT 5;
+JOIN ratings r ON m.id = r.movie_id
+WHERE m.id IN (
+    SELECT movie_id
+    FROM directors d
+    WHERE d.person_id = (
+        SELECT id
+        FROM people p
+        WHERE p.name = 'Chadwick Boseman'
+    )
+)
+ORDER BY r.rating DESC
+LIMIT 5;  -- Ajuste o limite conforme necessário
