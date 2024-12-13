@@ -40,10 +40,10 @@ def index():
     user_id = session['user_id']
 
     # Obter o saldo do usuário
-    user_balance = cs50.SQL("SELECT cash FROM users WHERE id = ?", user_id)[0]['cash']
+    user_balance = db.execute("SELECT cash FROM users WHERE id = ?", user_id)[0]['cash']
 
     # Obter ações do usuário
-    user_stocks = cs50.SQL("SELECT symbol, SUM(shares) as total_shares FROM transactions WHERE user_id = ? GROUP BY symbol", user_id)
+    user_stocks = db.execute("SELECT symbol, SUM(shares) as total_shares FROM transactions WHERE user_id = ? GROUP BY symbol", user_id)
 
     # Para cada ação, obter o preço atual
     stocks_with_prices = []
