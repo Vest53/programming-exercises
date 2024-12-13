@@ -174,19 +174,19 @@ def register():
             flash("As senhas não correspondem.")
             return redirect("/register")
 
-        # Inserir no banco de dados
-        try:
-            db = cs50.SQL("sqlite:///finance.db")  # Conecte-se ao banco de dados
-            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)",
-                       username, generate_password_hash(password))
-        except sqlite3.IntegrityError:
+        # Verifique se o nome de usuário já existe
+        existing_user = db.execute("SELECT * FROM users WHERE username = ?", username)
+        if existing_user:
             flash("Nome de usuário já existe.")
             return redirect("/register")
+
+        # Inserir no banco de dados
+        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)",
+                   username, generate_password_hash(password))
 
         return redirect("/login")
 
     return render_template("register.html")
-
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
