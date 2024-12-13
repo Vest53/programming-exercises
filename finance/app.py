@@ -75,13 +75,13 @@ def buy():
         # Lógica para procurar o preço atual e verificar saldo
         # Exemplo: price = lookup(symbol)
 
-        if not price or user_balance < price * int(shares):
+        if not cash or user_balance < cash * int(shares):
             flash("Saldo insuficiente.")
             return redirect("/buy")
 
         # Inserir a compra no banco de dados
-        cs50.SQL("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
-                  user_id, symbol, shares, price)
+        cs50.SQL("INSERT INTO transactions (users_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
+                  users_id, symbol, shares, price)
 
         return redirect("/")
 
@@ -90,7 +90,7 @@ def buy():
 
 @app.route("/history")
 def history():
-    transactions = cs50.SQL("SELECT * FROM transactions WHERE user_id = ?", user_id)
+    transactions = cs50.SQL("SELECT * FROM transactions WHERE users_id = ?", users_id)
     return render_template("history.html", transactions=transactions)
 
 
