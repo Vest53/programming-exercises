@@ -57,7 +57,8 @@ def index():
             'price': price,
             'total_value': total_shares * price  # Valor total das ações
         })
-return render_template("index.html", stocks=stocks_with_prices, balance=user_balance)
+
+    return render_template("login.html", stocks=stocks_with_prices, balance=user_balance)
 
 
 @app.route("/buy", methods=["GET", "POST"])
