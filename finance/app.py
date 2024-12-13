@@ -32,10 +32,11 @@ def after_request(response):
 
 
 @app.route("/")
-@login_required
 def index():
-    """Show portfolio of stocks"""
-    return apology("TODO")
+    # Lógica para obter ações e saldo do usuário
+    # Exemplo: user_stocks = get_user_stocks(user_id)
+
+    return render_template("index.html", stocks=user_stocks, balance=user_balance)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -66,10 +67,9 @@ def buy():
 
 
 @app.route("/history")
-@login_required
 def history():
-    """Show history of transactions"""
-    return apology("TODO")
+    transactions = cs50.SQL("SELECT * FROM transactions WHERE user_id = ?", user_id)
+    return render_template("history.html", transactions=transactions)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -111,15 +111,13 @@ def login():
         return render_template("login.html")
 
 
+from flask import session, redirect, url_for
+
 @app.route("/logout")
 def logout():
-    """Log user out"""
-
-    # Forget any user_id
+    # Remove o usuário da sessão
     session.clear()
-
-    # Redirect user to login form
-    return redirect("/")
+    return redirect(url_for("index"))
 
 
 @app.route("/quote", methods=["GET", "POST"])
@@ -140,8 +138,31 @@ def quote():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    """Register user"""
-    return apology("TODO")
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirmation = request.form.get("confirmation")
+
+        # Validação
+        if not username or not password or not confirmation:
+            flash("Deve preencher todos os campos.")
+            return redirect("/register")
+
+        if password != confirmation:
+            flash("As senhas não correspondem.")
+            return redirect("/register")
+
+        # Inserir no banco de dados
+        try:
+            cs50.SQL("INSERT INTO users (username, hash) VALUES (?, ?)",
+                      username, generate_password_hash(password))
+        except cs50.SQL.IntegrityError:
+            flash("Nome de usuário já existe.")
+            return redirect("/register")
+
+        return redirect("/login")
+
+    return render_template("register.html")
 
 
 @app.route("/sell", methods=["GET", "POST"])
