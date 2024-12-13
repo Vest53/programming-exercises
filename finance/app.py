@@ -146,12 +146,15 @@ def logout():
 def quote():
     if request.method == "POST":
         symbol = request.form.get("symbol")
-        # Lógica para buscar o preço da ação
-        # Exemplo: price = lookup(symbol)
+        price_data = lookup(symbol)  # Suponha que lookup retorna None se o símbolo não for encontrado
 
-        if not symbol or not price:
+        # Verifique se o símbolo é válido
+        if not symbol or price_data is None:
             flash("Símbolo inválido.")
             return redirect("/quote")
+
+        # Extraia o preço da resposta da função lookup
+        price = price_data["price"]  # Supondo que lookup retorna um dicionário com a chave 'price'
 
         return render_template("quoted.html", symbol=symbol, price=price)
 
