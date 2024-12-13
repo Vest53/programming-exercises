@@ -2,7 +2,7 @@ import os
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
-
+import sqlite3
 app = Flask(__name__)
 
 def get_db_connection():
