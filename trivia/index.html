@@ -1,31 +1,66 @@
 <!DOCTYPE html>
-
 <html lang="en">
-    <head>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
-        <link href="styles.css" rel="stylesheet">
-        <title>Trivia!</title>
-        <script>
-            // TODO: Add code to check answers to questions
-        </script>
-    </head>
-    <body>
-        <div class="header">
-            <h1>Trivia!</h1>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>Trivia!</title>
+    <script>
+        function checkMultipleChoiceAnswer(answer, button) {
+            const resultText = document.getElementById('result1');
+
+            if (answer === 'correct') {
+                button.classList.add('correct');
+                resultText.textContent = 'Correto!';
+            } else {
+                button.classList.add('incorrect');
+                resultText.textContent = 'Incorreto';
+            }
+
+            // Desabilita todos os botões após a resposta
+            const buttons = document.querySelectorAll('.multiple-choice button');
+            buttons.forEach(btn => btn.disabled = true);
+        }
+
+        function checkFreeResponseAnswer() {
+            const userAnswer = document.getElementById('freeResponseInput').value.toLowerCase();
+            const resultText = document.getElementById('result2');
+
+            if (userAnswer === 'júpiter') {  // Resposta correta
+                document.getElementById('freeResponseInput').classList.add('correct');
+                resultText.textContent = 'Correto!';
+            } else {
+                document.getElementById('freeResponseInput').classList.add('incorrect');
+                resultText.textContent = 'Incorreto';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>Trivia!</h1>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>Part 1: Multiple Choice</h2>
+            <hr>
+            <h3>Qual é a capital da França?</h3>
+            <div class="multiple-choice">
+                <button onclick="checkMultipleChoiceAnswer('incorrect', this)">Londres</button>
+                <button onclick="checkMultipleChoiceAnswer('incorrect', this)">Berlim</button>
+                <button onclick="checkMultipleChoiceAnswer('correct', this)">Paris</button>
+            </div>
+            <p id="result1"></p>
         </div>
 
-        <div class="container">
-            <div class="section">
-                <h2>Part 1: Multiple Choice </h2>
-                <hr>
-                <!-- TODO: Add multiple choice question here -->
-            </div>
-
-            <div class="section">
-                <h2>Part 2: Free Response</h2>
-                <hr>
-                <!-- TODO: Add free response question here -->
-            </div>
+        <div class="section">
+            <h2>Part 2: Free Response</h2>
+            <hr>
+            <h3>Qual é o maior planeta do sistema solar?</h3>
+            <input type="text" id="freeResponseInput" placeholder="Digite sua resposta aqui">
+            <button onclick="checkFreeResponseAnswer()">Confirmar</button>
+            <p id="result2"></p>
         </div>
-    </body>
+    </div>
+</body>
 </html>
