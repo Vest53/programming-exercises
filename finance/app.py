@@ -39,10 +39,30 @@ def index():
 
 
 @app.route("/buy", methods=["GET", "POST"])
-@login_required
 def buy():
-    """Buy shares of stock"""
-    return apology("TODO")
+    if request.method == "POST":
+        symbol = request.form.get("symbol")
+        shares = request.form.get("shares")
+
+        # Validação
+        if not symbol or not shares.isdigit() or int(shares) <= 0:
+            flash("Entrada inválida.")
+            return redirect("/buy")
+
+        # Lógica para procurar o preço atual e verificar saldo
+        # Exemplo: price = lookup(symbol)
+
+        if not price or user_balance < price * int(shares):
+            flash("Saldo insuficiente.")
+            return redirect("/buy")
+
+        # Inserir a compra no banco de dados
+        cs50.SQL("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
+                  user_id, symbol, shares, price)
+
+        return redirect("/")
+
+    return render_template("buy.html")
 
 
 @app.route("/history")
@@ -103,10 +123,19 @@ def logout():
 
 
 @app.route("/quote", methods=["GET", "POST"])
-@login_required
 def quote():
-    """Get stock quote."""
-    return apology("TODO")
+    if request.method == "POST":
+        symbol = request.form.get("symbol")
+        # Lógica para buscar o preço da ação
+        # Exemplo: price = lookup(symbol)
+
+        if not symbol or not price:
+            flash("Símbolo inválido.")
+            return redirect("/quote")
+
+        return render_template("quoted.html", symbol=symbol, price=price)
+
+    return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -116,7 +145,27 @@ def register():
 
 
 @app.route("/sell", methods=["GET", "POST"])
-@login_required
 def sell():
-    """Sell shares of stock"""
-    return apology("TODO")
+    if request.method == "POST":
+        symbol = request.form.get("symbol")
+        shares = request.form.get("shares")
+
+        # Validação
+        if not symbol or not shares.isdigit() or int(shares) <= 0:
+            flash("Entrada inválida.")
+            return redirect("/sell")
+
+        # Lógica para verificar se o usuário possui ações
+        # Exemplo: user_shares = get_user_shares(user_id, symbol)
+
+        if user_shares < int(shares):
+            flash("Você não possui ações suficientes.")
+            return redirect("/sell")
+
+        # Inserir a venda no banco de dados
+        cs50.SQL("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
+                  user_id, symbol, -int(shares), price)
+
+        return redirect("/")
+
+    return render_template("sell.html")
