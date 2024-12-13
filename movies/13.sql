@@ -1,7 +1,17 @@
 SELECT DISTINCT p.name
 FROM people p
-JOIN directors d ON p.id = d.person_id
-JOIN movies m ON d.movie_id = m.id
-JOIN directors kb_d ON m.id = kb_d.movie_id
-JOIN people kb ON kb_d.person_id = kb.id
-WHERE kb.name = 'Kevin Bacon' AND kb.birth = 1958 AND p.name != 'Kevin Bacon';
+JOIN stars s ON p.id = s.person_id
+WHERE s.movie_id IN (
+    SELECT movie_id
+    FROM stars
+    WHERE person_id = (
+        SELECT id
+        FROM people
+        WHERE name = 'Kevin Bacon' AND birth = 1958
+    )
+)
+AND p.id != (
+    SELECT id
+    FROM people
+    WHERE name = 'Kevin Bacon' AND birth = 1958
+);
