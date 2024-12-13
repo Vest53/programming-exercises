@@ -176,9 +176,10 @@ def register():
 
         # Inserir no banco de dados
         try:
-            cs50.SQL("INSERT INTO users (username, hash) VALUES (?, ?)",
-                      username, generate_password_hash(password))
-        except cs50.SQL.IntegrityError:
+            db = cs50.SQL("sqlite:///finance.db")  # Conecte-se ao banco de dados
+            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)",
+                       username, generate_password_hash(password))
+        except sqlite3.IntegrityError:
             flash("Nome de usuário já existe.")
             return redirect("/register")
 
