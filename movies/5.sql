@@ -1,4 +1,4 @@
-SELECT title, release_year
+SELECT title, year
 FROM movies
 WHERE title LIKE 'Harry Potter%'
-ORDER BY release_year ASC;
+ORDER BY year ASC;

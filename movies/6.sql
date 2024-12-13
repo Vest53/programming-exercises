@@ -1,3 +1,4 @@
-SELECT AVG(imdb_rating) AS average_rating
-FROM movies
-WHERE release_year = 2012;
+SELECT AVG(rating) AS average_rating
+FROM ratings r
+JOIN movies m ON r.movie_id = m.id
+WHERE m.year = 2012;
