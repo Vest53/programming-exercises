@@ -1,3 +1,3 @@
 SELECT title
 FROM movies
-WHERE release_year = 2008;
+WHERE year = 2008;
