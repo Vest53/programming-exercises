@@ -33,10 +33,32 @@ def after_request(response):
 
 @app.route("/")
 def index():
-    # Lógica para obter ações e saldo do usuário
-    # Exemplo: user_stocks = get_user_stocks(user_id)
+    # Garantir que o usuário esteja autenticado
+    if 'user_id' not in session:
+        return redirect(url_for("login"))
 
-    return render_template("index.html", stocks=user_stocks, balance=user_balance)
+    user_id = session['user_id']
+
+    # Obter o saldo do usuário
+    user_balance = cs50.SQL("SELECT cash FROM users WHERE id = ?", user_id)[0]['cash']
+
+    # Obter ações do usuário
+    user_stocks = cs50.SQL("SELECT symbol, SUM(shares) as total_shares FROM transactions WHERE user_id = ? GROUP BY symbol", user_id)
+
+    # Para cada ação, obter o preço atual
+    stocks_with_prices = []
+    for stock in user_stocks:
+        symbol = stock['symbol']
+        total_shares = stock['total_shares']
+        price = lookup(symbol)  # Função que busca o preço da ação
+        stocks_with_prices.append({
+            'symbol': symbol,
+            'total_shares': total_shares,
+            'price': price,
+            'total_value': total_shares * price  # Valor total das ações
+        })
+
+    return render_template("index.html", stocks=stocks_with_prices, balance=user_balance)
 
 
 @app.route("/buy", methods=["GET", "POST"])
