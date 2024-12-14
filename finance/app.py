@@ -159,7 +159,7 @@ def register():
         confirmation = request.form.get("confirmation")
 
         # Validação
-        if not username or not password or not confirmation:
+        if password == "" or confirmation == "" or username == "":
             flash("Deve preencher todos os campos.")
             return redirect("/register")
 
