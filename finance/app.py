@@ -134,21 +134,26 @@ def logout():
 
 @app.route("/quote", methods=["GET", "POST"])
 def quote():
+    """Get stock quote."""
+
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         symbol = request.form.get("symbol")
-        price_data = lookup(symbol)  # Suponha que lookup retorna None se o símbolo não for encontrado
+        # Ensure symbol is not blank
+        if symbol == "":
+            return apology("input is blank", 400)
 
-        # Verifique se o símbolo é válido
-        if not symbol or price_data is None:
-            flash("Símbolo inválido.")
-            return redirect("/quote")
+        stock_quote = lookup(symbol)
 
-        # Extraia o preço da resposta da função lookup
-        price = price_data["price"]  # Supondo que lookup retorna um dicionário com a chave 'price'
+        if not stock_quote:
+            return apology("INVALID SYMBOL", 400)
+        else:
+            return render_template("quoted.html", symbol=stock_quote)
 
-        return render_template("quoted.html", symbol=symbol, price=price)
+    # User reached route via GET
+    else:
+        return render_template("quote.html")
 
-    return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
