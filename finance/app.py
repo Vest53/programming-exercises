@@ -33,44 +33,7 @@ def after_request(response):
     return response
 
 
-@app.route("/")
-@login_required
-def index():
-    user_id = session["user_id"]
 
-    # Obter as ações do usuário, somando as ações por símbolo
-    user_stocks = db.execute("""
-        SELECT symbol, SUM(shares) AS total_shares
-        FROM transactions
-        WHERE user_id = ?
-        GROUP BY symbol
-    """, user_id)
-
-    total_value = 0
-    stocks_with_prices = []
-
-    # Para cada ação, obtenha o preço atual e calcule o valor total
-    for stock in user_stocks:
-        lookup_result = lookup(stock["symbol"])  # Obter o preço atual
-        if lookup_result:
-            price = lookup_result["price"]
-            total_shares = stock["total_shares"]
-            total_stock_value = price * total_shares
-            total_value += total_stock_value  # Acumulando o valor total das ações
-            stocks_with_prices.append({
-                "symbol": stock["symbol"],
-                "total_shares": total_shares,
-                "price": price,
-                "total_value": total_stock_value
-            })
-
-    # Obter o saldo de caixa do usuário
-    user_balance = db.execute("SELECT cash FROM users WHERE id = ?", user_id)[0]["cash"]
-
-    # Calcular o valor total (ações + saldo)
-    total_value += user_balance
-
-    return render_template("index.html", stocks=stocks_with_prices, balance=user_balance, total_value=total_value)
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
