@@ -76,28 +76,12 @@ def buy():
 @app.route("/history")
 @login_required
 def history():
-    user_id = session["user_id"]
+    """Show history of transactions"""
+    # Query database for username & transactions
+    user_transactions = db.execute(
+        "SELECT id, symbol, shares, price, transacted  FROM trades WHERE id = ? ORDER BY transacted", session["user_id"])
 
-    try:
-        # Obter todas as transações do usuário
-        transactions = db.execute("""
-            SELECT symbol, shares, price, timestamp
-            FROM transactions
-            WHERE user_id = ?
-            ORDER BY timestamp DESC
-        """, user_id)
-
-        # Formatar as transações para exibir compra ou venda
-        for transaction in transactions:
-            transaction['type'] = "Compra" if transaction['shares'] > 0 else "Venda"
-            transaction['shares'] = abs(transaction['shares'])  # Usar valor absoluto para mostrar o número de ações
-
-        return render_template("history.html", transactions=transactions)
-
-    except Exception as e:
-        # Log do erro e retorno de uma mensagem amigável
-        print(f"Erro ao obter transações: {e}")
-        return render_template("error.html", message="Ocorreu um erro ao obter suas transações.")
+    return render_template("history.html", user_transactions=user_transactions)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
