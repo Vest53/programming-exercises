@@ -7,7 +7,7 @@
 
 {% block main %}
     <h1>Preço da Ação</h1>
-    <p>O preço da ação <strong>{{ symbol }}</strong> é R$ {{ price }}</p>
+    <p>A share of {{ symbol["name"]}} ({{symbol["symbol"]}}) costs {{symbol["price"] | usd}}</p>
     <a href="/quote">Consultar outra ação</a>
     <a href="/">Voltar para o Início</a>
 {% endblock %}
