@@ -165,7 +165,7 @@ def register():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        
+
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
