@@ -64,25 +64,39 @@ def index():
 
 
 @app.route("/buy", methods=["GET", "POST"])
+@login_required
 def buy():
     if request.method == "POST":
         symbol = request.form.get("symbol")
         shares = request.form.get("shares")
 
+        # Verifique se o símbolo está preenchido e se shares é um inteiro positivo
         if not symbol or not shares.isdigit() or int(shares) <= 0:
-            flash("Entrada inválida.")
+            flash("Entrada inválida. Por favor, preencha os campos corretamente.")
             return redirect("/buy")
 
-        price = lookup(symbol)  # Obter o preço atual da ação
-        user_balance = cs50.SQL("SELECT cash FROM users WHERE id = ?", session['user_id'])[0]['cash']
-
-        if price is None or user_balance < price * int(shares):
-            flash("Saldo insuficiente ou símbolo inválido.")
+        price_data = lookup(symbol)  # Obter o preço atual da ação
+        if price_data is None:
+            flash("Símbolo inválido.")
             return redirect("/buy")
 
-        cs50.SQL("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
-                  session['user_id'], symbol, int(shares), price)
+        price = price_data['price']  # Supondo que a função lookup retorna um dicionário com a chave 'price'
+        user_balance = db.execute("SELECT cash FROM users WHERE id = ?", session['user_id'])[0]['cash']
 
+        # Verifique se o usuário tem saldo suficiente
+        total_cost = price * int(shares)
+        if user_balance < total_cost:
+            flash("Saldo insuficiente para completar a compra.")
+            return redirect("/buy")
+
+        # Registrar a compra na tabela transactions
+        db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
+                   session['user_id'], symbol, int(shares), price)
+
+        # Atualizar o saldo do usuário
+        db.execute("UPDATE users SET cash = cash - ? WHERE id = ?", total_cost, session['user_id'])
+
+        flash("Compra realizada com sucesso!")
         return redirect("/")
 
     return render_template("buy.html")

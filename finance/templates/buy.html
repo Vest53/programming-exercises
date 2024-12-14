@@ -1,0 +1,21 @@
+<!-- templates/buy.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Comprar Ações</title>
+</head>
+<body>
+    <h1>Comprar Ações</h1>
+    <form action="/buy" method="POST">
+        <label for="symbol">Símbolo da Ação:</label>
+        <input type="text" id="symbol" name="symbol" required>
+        <br>
+        <label for="shares">Número de Ações:</label>
+        <input type="text" id="shares" name="shares" required>
+        <br>
+        <input type="submit" value="Comprar">
+    </form>
+    <a href="/">Voltar para o Início</a>
+</body>
+</html>
