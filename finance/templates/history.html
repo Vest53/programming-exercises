@@ -1,4 +1,3 @@
-<!-- templates/history.html -->
 {% extends "layout.html" %}
 
 {% block title %}
@@ -6,42 +5,24 @@
 {% endblock %}
 
 {% block main %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Histórico de Transações</title>
-</head>
-<body>
-    <h1>Histórico de Transações</h1>
-
-    <table>
+    <table class="table tablestriped">
         <thead>
             <tr>
-                <th>Tipo</th>
-                <th>Símbolo</th>
-                <th>Preço</th>
-                <th>Número de Ações</th>
-                <th>Data e Hora</th>
+                <th class="text-start">Symbol</th>
+                <th class="text-end">Shares</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Transacted</th>
             </tr>
         </thead>
         <tbody>
-            {% if transactions %}
+            <!-- Loop through the database entries to display them in this table -->
             {% for transaction in user_transactions %}
-            <tr>
-                <td class="text-start">{{ transaction["symbol"] | usd}}</td>
-                <td class="text-end">{{ transaction["shares"]| usd}}</td>
-                <td class="text-end">{{ transaction["price"] | usd}}</td>
-                <td class="text-end">{{ transaction["transacted"]| usd}}</td>
-            </tr>
-        {% endfor %}
-            {% else %}
                 <tr>
-                    <td colspan="5">Nenhuma transação encontrada.</td>
+                    <td class="text-start">{{ transaction["symbol"] }}</td>
+                    <td class="text-end">{{ transaction["shares"]}}</td>
+                    <td class="text-end">{{ transaction["price"] | usd}}</td>
+                    <td class="text-end">{{ transaction["transacted"]}}</td>
                 </tr>
-            {% endif %}
-        </tbody>
+            {% endfor %}
     </table>
-</body>
-</html>
 {% endblock %}
