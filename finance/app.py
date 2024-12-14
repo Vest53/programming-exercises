@@ -1,3 +1,4 @@
+from flask import session, redirect, url_for
 import os
 import cs50
 import sqlite3
@@ -33,8 +34,6 @@ def after_request(response):
     return response
 
 
-
-
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
@@ -54,8 +53,10 @@ def buy():
         if price_data is None:
             return "Símbolo inválido.", 400
 
-        price = price_data['price']  # Supondo que a função lookup retorna um dicionário com a chave 'price'
-        user_balance = db.execute("SELECT cash FROM users WHERE id = ?", session['user_id'])[0]['cash']
+        # Supondo que a função lookup retorna um dicionário com a chave 'price'
+        price = price_data['price']
+        user_balance = db.execute("SELECT cash FROM users WHERE id = ?",
+                                  session['user_id'])[0]['cash']
 
         # Verifique se o usuário tem saldo suficiente
         total_cost = price * int(shares)
@@ -74,6 +75,7 @@ def buy():
 
     return render_template("buy.html")
 
+
 @app.route("/history")
 @login_required
 def history():
@@ -84,6 +86,7 @@ def history():
         "SELECT symbol, shares, price, transacted FROM transactions WHERE user_id = ? ORDER BY transacted", user_id)
 
     return render_template("history.html", user_transactions=user_transactions)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -124,8 +127,6 @@ def login():
         return render_template("login.html")
 
 
-from flask import session, redirect, url_for
-
 @app.route("/logout")
 def logout():
     # Remove o usuário da sessão
@@ -136,7 +137,6 @@ def logout():
 @app.route("/quote", methods=["GET", "POST"])
 def quote():
     """Get stock quote."""
-
 
     if request.method == "POST":
         symbol = request.form.get("symbol")
@@ -151,10 +151,8 @@ def quote():
         else:
             return render_template("quoted.html", symbol=stock_quote)
 
-
     else:
         return render_template("quote.html")
-
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -244,6 +242,7 @@ def sell():
 
     return render_template("sell.html", stocks=stocks)
 
+
 @app.route("/change_password", methods=["GET", "POST"])
 @login_required
 def change_password():
@@ -256,11 +255,13 @@ def change_password():
             return redirect("/change_password")
 
         # Atualizar a senha no banco de dados
-        db.execute("UPDATE users SET hash = ? WHERE id = ?", generate_password_hash(new_password), session['user_id'])
+        db.execute("UPDATE users SET hash = ? WHERE id = ?",
+                   generate_password_hash(new_password), session['user_id'])
         flash("Senha alterada com sucesso!")
         return redirect("/")
 
     return render_template("change_password.html")
+
 
 @app.route("/")
 @login_required
