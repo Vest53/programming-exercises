@@ -153,33 +153,42 @@ def quote():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Register user"""
+
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+
+        # Validate submission
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
 
-        # Validação
+        # Query database for username
+        rows = db.execute("SELECT * FROM users WHERE username = ?", username)
+
+        # Ensure password == confirmation
+        if not (password == confirmation):
+            return apology("the passwords do not match", 400)
+
+        # Ensure password not blank
         if password == "" or confirmation == "" or username == "":
-            flash("Deve preencher todos os campos.")
-            return redirect("/register")
+            return apology("input is blank", 400)
 
-        if password != confirmation:
-            flash("As senhas não correspondem.")
-            return redirect("/register")
+        # Ensure username does not exists already
+        if len(rows) == 1:
+            return apology("username already exist", 400)
+        else:
+            hashcode = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
+            db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", username, hashcode)
 
-        # Verifique se o nome de usuário já existe
-        existing_user = db.execute("SELECT * FROM users WHERE username = ?", username)
-        if existing_user:
-            flash("Nome de usuário já existe.")
-            return redirect("/register")
+        # Redirect user to home page
+        return redirect("/")
 
-        # Inserir no banco de dados
-        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)",
-                   username, generate_password_hash(password))
-
-        return redirect("/login")
-
-    return render_template("register.html")
+    else:
+        return render_template("register.html")
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
