@@ -20,15 +20,15 @@
         </thead>
         <tbody>
             {% if transactions %}
-                {% for transaction in transactions %}
-                    <tr>
-                        <td>{{ transaction.type }}</td>
-                        <td>{{ transaction.symbol }}</td>
-                        <td>R$ {{ transaction.price }}</td>
-                        <td>{{ transaction.shares }}</td>
-                        <td>{{ transaction.timestamp }}</td>
-                    </tr>
-                {% endfor %}
+            {% for transaction in user_transactions %}
+            <tr>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.symbol }}</td>
+                <td>R$ {{ transaction.price }}</td>
+                <td>{{ transaction.shares }}</td>
+                <td>{{ transaction.transacted }}</td>
+            </tr>
+        {% endfor %}
             {% else %}
                 <tr>
                     <td colspan="5">Nenhuma transação encontrada.</td>
