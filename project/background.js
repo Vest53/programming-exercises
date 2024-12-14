@@ -4,7 +4,7 @@ let timer;
 function startTimer() {
     timer = setInterval(() => {
         totalTime += 1; // Incrementa o tempo em segundos
-        if (totalTime % 1800 === 0) { // A cada 30 minutos
+        if (totalTime % 3600 === 0) { // A cada 1 hora
             sendNotification();
         }
     }, 1000);
@@ -20,15 +20,10 @@ function sendNotification() {
     });
 }
 
+// Inicia o timer quando a extensão é ativada
+chrome.runtime.onInstalled.addListener(startTimer);
 chrome.tabs.onActivated.addListener(() => {
     if (!timer) {
         startTimer();
-    }
-});
-
-chrome.tabs.onRemoved.addListener(() => {
-    if (chrome.tabs.query({active: true}).length === 0) {
-        clearInterval(timer);
-        timer = null;
     }
 });
