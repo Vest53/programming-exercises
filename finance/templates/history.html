@@ -31,7 +31,7 @@
             <tr>
                 <td>{{ transaction.type }}</td>
                 <td>{{ transaction.symbol }}</td>
-                <td>R$ {{ transaction.price }}</td>
+                <td>R$ {{ transaction.price | usd}}</td>
                 <td>{{ transaction.shares }}</td>
                 <td>{{ transaction.transacted }}</td>
             </tr>
