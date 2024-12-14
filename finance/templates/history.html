@@ -19,8 +19,22 @@
             </tr>
         </thead>
         <tbody>
-            {% for transaction in transactions %}
+            {% if transactions %}
+                {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.type }}</td>
+                        <td>{{ transaction.symbol }}</td>
+                        <td>R$ {{ transaction.price }}</td>
+                        <td>{{ transaction.shares }}</td>
+                        <td>{{ transaction.timestamp }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
                 <tr>
-                    <td>{{ transaction.type }}</td>
-                    <td>{{ transaction.symbol }}</td>
-                    <td>R$ {{ transaction.price }}</td>
+                    <td colspan="5">Nenhuma transação encontrada.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</body>
+</html>
