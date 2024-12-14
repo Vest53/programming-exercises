@@ -1,0 +1,25 @@
+<!-- templates/quote.html -->
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultar Preço da Ação</title>
+</head>
+<body>
+    <h1>Consultar Preço da Ação</h1>
+    <form action="/quote" method="POST">
+        <label for="symbol">Símbolo da Ação:</label>
+        <input type="text" id="symbol" name="symbol" required>
+        <button class="btn btn-primary" type="submit">Consultar</button>
+    </form>
+    <a href="/">Voltar para o Início</a>
+</body>
+</html>
+{% endblock %}

@@ -132,23 +132,26 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/quote", methods=["GET", "POST"])
+@app.route("/quote", methods=["POST"])
+@login_required
 def quote():
-    if request.method == "POST":
-        symbol = request.form.get("symbol")
-        price_data = lookup(symbol)  # Suponha que lookup retorna None se o símbolo não for encontrado
+    symbol = request.form.get("symbol").strip()
 
-        # Verifique se o símbolo é válido
-        if not symbol or price_data is None:
-            flash("Símbolo inválido.")
-            return redirect("/quote")
+    # Verifica se o símbolo está vazio
+    if not symbol:
+        return "Símbolo não pode ser vazio.", 400
 
-        # Extraia o preço da resposta da função lookup
-        price = price_data["price"]  # Supondo que lookup retorna um dicionário com a chave 'price'
+    # Verifica se o símbolo é inválido (implemente sua lógica de validação)
+    if not is_valid_symbol(symbol):  # Suponha que você tenha uma função que valide o símbolo
+        return "Símbolo inválido.", 400
 
-        return render_template("quoted.html", symbol=symbol, price=price)
+    # Obtém o preço da ação (supondo que você tenha uma função para isso)
+    price = get_stock_price(symbol)
 
-    return render_template("quoted.html")
+    if price is None:
+        return "Não foi possível encontrar o preço para o símbolo fornecido.", 404
+
+    return render_template("quote_result.html", symbol=symbol, price=price)
 
 
 @app.route("/register", methods=["GET", "POST"])
