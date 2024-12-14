@@ -113,8 +113,21 @@ def buy():
 @app.route("/history")
 @login_required
 def history():
-    user_id = session['user_id']
-    transactions = cs50.SQL("SELECT * FROM transactions WHERE user_id = ?", user_id)
+    user_id = session["user_id"]
+
+    # Obter todas as transações do usuário
+    transactions = db.execute("""
+        SELECT symbol, shares, price, timestamp
+        FROM transactions
+        WHERE user_id = ?
+        ORDER BY timestamp DESC
+    """, user_id)
+
+    # Formatar as transações para exibir compra ou venda
+    for transaction in transactions:
+        transaction['type'] = "Compra" if transaction['shares'] > 0 else "Venda"
+        transaction['shares'] = abs(transaction['shares'])  # Usar valor absoluto para mostrar o número de ações
+
     return render_template("history.html", transactions=transactions)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -221,21 +234,45 @@ def sell():
         symbol = request.form.get("symbol")
         shares = request.form.get("shares")
 
-        if not symbol or not shares.isdigit() or int(shares) <= 0:
-            flash("Entrada inválida.")
+        # Verifique se o símbolo está selecionado
+        if not symbol:
+            flash("Por favor, selecione uma ação.")
             return redirect("/sell")
 
-        user_id = session['user_id']
-        user_shares = cs50.SQL("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ?", user_id, symbol)[0]['SUM(shares)'] or 0
-
-        if user_shares < int(shares):
-            flash("Você não possui ações suficientes.")
+        # Verifique se o número de ações é um inteiro positivo
+        if not shares.isdigit() or int(shares) <= 0:
+            flash("Número de ações inválido. Deve ser um inteiro positivo.")
             return redirect("/sell")
 
-        price = lookup(symbol)
-        cs50.SQL("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
-                  user_id, symbol, -int(shares), price)
+        shares = int(shares)
 
+        # Verifique se o usuário possui ações suficientes
+        user_id = session["user_id"]
+        user_shares = db.execute("""
+            SELECT SUM(shares) AS total_shares
+            FROM transactions
+            WHERE user_id = ? AND symbol = ?
+            GROUP BY symbol
+        """, user_id, symbol)
+
+        if not user_shares or user_shares[0]["total_shares"] < shares:
+            flash("Você não possui ações suficientes para vender.")
+            return redirect("/sell")
+
+        # Registrar a venda na tabela transactions
+        db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
+                   user_id, symbol, -shares, lookup(symbol)["price"])
+
+        flash("Venda realizada com sucesso!")
         return redirect("/")
 
-    return render_template("sell.html")
+    # Se for um GET, exiba o formulário com as ações que o usuário possui
+    user_id = session["user_id"]
+    stocks = db.execute("""
+        SELECT symbol, SUM(shares) AS total_shares
+        FROM transactions
+        WHERE user_id = ?
+        GROUP BY symbol
+    """, user_id)
+
+    return render_template("sell.html", stocks=stocks)

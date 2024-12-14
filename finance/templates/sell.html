@@ -1,0 +1,26 @@
+<!-- templates/sell.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Vender Ações</title>
+</head>
+<body>
+    <h1>Vender Ações</h1>
+    <form action="/sell" method="POST">
+        <label for="symbol">Símbolo da Ação:</label>
+        <select id="symbol" name="symbol" required>
+            <option value="">Selecione uma ação</option>
+            {% for stock in stocks %}
+                <option value="{{ stock.symbol }}">{{ stock.symbol }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="shares">Número de Ações:</label>
+        <input type="text" id="shares" name="shares" required>
+        <br>
+        <input type="submit" value="Vender">
+    </form>
+    <a href="/">Voltar para o Início</a>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!-- templates/history.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Histórico de Transações</title>
+</head>
+<body>
+    <h1>Histórico de Transações</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Símbolo</th>
+                <th>Preço</th>
+                <th>Número de Ações</th>
+                <th>Data e Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.symbol }}</td>
+                    <td>R$ {{ transaction.price }}</td>
