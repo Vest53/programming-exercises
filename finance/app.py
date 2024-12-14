@@ -79,7 +79,7 @@ def history():
     """Show history of transactions"""
     # Query database for username & transactions
     user_transactions = db.execute(
-        "SELECT id, symbol, price, DATETIME  FROM transactions WHERE id = ? ORDER BY transacted", session["user_id"])
+        "SELECT id, symbol, shares, price, transacted  FROM transactions WHERE id = ? ORDER BY transacted", session["user_id"])
 
     return render_template("history.html", user_transactions=user_transactions)
 
