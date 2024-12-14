@@ -38,29 +38,35 @@ def after_request(response):
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
+      """Buy shares of stock"""
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         symbol = request.form.get("symbol")
-        shares = request.form.get("shares")
+        shares_nbr = request.form.get("shares")
 
-        # Verifique se o símbolo está preenchido e se shares é um inteiro positivo
-        if not symbol or not shares.isdigit() or int(shares) <= 0:
-            flash("Entrada inválida. Por favor, preencha os campos corretamente.")
-            return redirect("/buy")
+        # Ensure symbol is not blank
+        if symbol == "":
+            return apology("MISSING SYMBOL", 400)
+        if shares_nbr == "" or shares_nbr.isalpha():
+            return apology("MISSING SHARES", 400)
+        if not is_int(shares_nbr):
+            return apology("fractional not supported", 400)
+        if int(shares_nbr) <= 0:
+            return apology("share number can't be negative number or zero!", 400)
 
-        price_data = lookup(symbol)  # Obter o preço atual da ação
-        if price_data is None:
-            flash("Símbolo inválido.")
-            return redirect("/buy")
+        stock_quote = lookup(symbol)
 
-        price = price_data['price']  # Supondo que a função lookup retorna um dicionário com a chave 'price'
-        user_balance = db.execute("SELECT cash FROM users WHERE id = ?", session['user_id'])[0]['cash']
+        if not stock_quote:
+            return apology("INVALID SYMBOL", 400)
 
-        # Verifique se o usuário tem saldo suficiente
-        total_cost = price * int(shares)
-        if user_balance < total_cost:
-            flash("Saldo insuficiente para completar a compra.")
-            return redirect("/buy")
+        total_cost = int(shares_nbr) * stock_quote["price"]
 
+        user_cash = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+
+        if user_cash[0]["cash"] < total_cost:
+            return apology("CAN'T AFFORD", 400)
+
+         else;
         # Registrar a compra na tabela transactions
         db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
                    session['user_id'], symbol, int(shares), price)
