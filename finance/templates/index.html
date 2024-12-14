@@ -5,36 +5,28 @@
 {% endblock %}
 
 {% block main %}
-    <table class="table tablestriped">
-        <thead>
+<h1>Bem-vindo à sua conta!</h1>
+<h2>Seu saldo: R$ {{ balance }}</h2>
+<h2>Valor total das ações: R$ {{ total_value }}</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Símbolo</th>
+            <th>Ações Possuídas</th>
+            <th>Preço Atual</th>
+            <th>Valor Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stock in stocks %}
             <tr>
-                <th class="text-start">Symbol</th>
-                <th class="text-start">Name</th>
-                <th class="text-end">Shares</th>
-                <th class="text-end">Price</th>
-                <th class="text-end">TOTAL</th>
+                <td>{{ stock.symbol }}</td>
+                <td>{{ stock.total_shares }}</td>
+                <td>R$ {{ stock.price }}</td>
+                <td>R$ {{ stock.total_value }}</td>
             </tr>
-        </thead>
-        <tbody>
-            <!-- Loop through the database entries to display them in this table -->
-            {% for share in user_portfolio %}
-                <tr>
-                    <td class="text-start">{{ share["symbol"] }}</td>
-                    <td class="text-start">{{ share["name"]}}</td>
-                    <td class="text-end">{{ share["SUM(shares)"]}}</td>
-                    <td class="text-end">{{ share["currentprice"] | usd}}</td>
-                    <td class="text-end">{{ share["totalprice"] | usd}}</td>
-                </tr>
-            {% endfor %}
-        <tfoot>
-            <tr>
-                <td class="border-0 fw-bold text-end" colspan="4">Cash</td>
-                <td class="border-0 text-end">{{balance[0]["cash"] | usd}}</td>
-            </tr>
-            <tr>
-                <td class="border-0 fw-bold text-end" colspan="4">TOTAL</td>
-                <td class="border-0 w-bold text-end">{{(balance[0]["cash"] + current_worth) | usd}}</td>
-            </tr>
-        </tfoot>
-    </table>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
