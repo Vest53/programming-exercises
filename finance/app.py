@@ -206,13 +206,11 @@ def sell():
 
         # Verifique se o símbolo está selecionado
         if not symbol:
-            flash("Por favor, selecione uma ação.")
-            return redirect("/sell")
+            return "Por favor, selecione uma ação.", 400
 
         # Verifique se o número de ações é um inteiro positivo
         if not shares.isdigit() or int(shares) <= 0:
-            flash("Número de ações inválido. Deve ser um inteiro positivo.")
-            return redirect("/sell")
+            return "Número de ações inválido. Deve ser um inteiro positivo.", 400
 
         shares = int(shares)
 
@@ -226,8 +224,7 @@ def sell():
         """, user_id, symbol)
 
         if not user_shares or user_shares[0]["total_shares"] < shares:
-            flash("Você não possui ações suficientes para vender.")
-            return redirect("/sell")
+            return "Você não possui ações suficientes para vender.", 400
 
         # Registrar a venda na tabela transactions
         db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
