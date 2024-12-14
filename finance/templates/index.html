@@ -6,8 +6,8 @@
 
 {% block main %}
 <h1>Bem-vindo à sua conta!</h1>
-<h2>Seu saldo: R$ {{ balance }}</h2>
-<h2>Valor total das ações: R$ {{ total_value }}</h2>
+<h2>Seu saldo: R$ {{ balance | usd}}</h2>
+<h2>Valor total das ações: R$ {{ total_value | usd}}</h2>
 
 <table>
     <thead>
@@ -23,8 +23,8 @@
             <tr>
                 <td>{{ stock.symbol }}</td>
                 <td>{{ stock.total_shares }}</td>
-                <td>R$ {{ stock.price }}</td>
-                <td>R$ {{ stock.total_value }}</td>
+                <td>R$ {{ stock.price | usd}}</td>
+                <td>R$ {{ stock.total_value | usd}}</td>
             </tr>
         {% endfor %}
     </tbody>
