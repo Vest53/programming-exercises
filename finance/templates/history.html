@@ -29,10 +29,10 @@
             {% if transactions %}
             {% for transaction in user_transactions %}
             <tr>
-                <td class="text-start">{{ transaction["symbol"] }}</td>
-                <td class="text-end">{{ transaction["shares"]}}</td>
+                <td class="text-start">{{ transaction["symbol"] | usd}}</td>
+                <td class="text-end">{{ transaction["shares"]| usd}}</td>
                 <td class="text-end">{{ transaction["price"] | usd}}</td>
-                <td class="text-end">{{ transaction["transacted"]}}</td>
+                <td class="text-end">{{ transaction["transacted"]| usd}}</td>
             </tr>
         {% endfor %}
             {% else %}
