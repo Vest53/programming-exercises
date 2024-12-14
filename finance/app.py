@@ -42,15 +42,17 @@ def buy():
         symbol = request.form.get("symbol")
         shares = request.form.get("shares")
 
-        # Verifique se o símbolo está preenchido e se shares é um inteiro positivo
-        if not symbol or not shares.isdigit() or int(shares) <= 0:
-            flash("Entrada inválida. Por favor, preencha os campos corretamente.")
-            return redirect("/buy")
+        # Verifique se o símbolo está preenchido
+        if not symbol:
+            return "Símbolo não pode ser vazio.", 400
+
+        # Verifique se shares é um número inteiro positivo
+        if not shares.isdigit() or int(shares) <= 0:
+            return "Número de ações inválido. Deve ser um número inteiro positivo.", 400
 
         price_data = lookup(symbol)  # Obter o preço atual da ação
         if price_data is None:
-            flash("Símbolo inválido.")
-            return redirect("/buy")
+            return "Símbolo inválido.", 400
 
         price = price_data['price']  # Supondo que a função lookup retorna um dicionário com a chave 'price'
         user_balance = db.execute("SELECT cash FROM users WHERE id = ?", session['user_id'])[0]['cash']
@@ -58,8 +60,7 @@ def buy():
         # Verifique se o usuário tem saldo suficiente
         total_cost = price * int(shares)
         if user_balance < total_cost:
-            flash("Saldo insuficiente para completar a compra.")
-            return redirect("/buy")
+            return "Saldo insuficiente para completar a compra.", 400
 
         # Registrar a compra na tabela transactions
         db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
