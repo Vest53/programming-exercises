@@ -156,6 +156,7 @@ def quote():
 
 
 
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
 
@@ -165,34 +166,35 @@ def register():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-
+        # Validate submission
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
 
-
+        # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = ?", username)
 
-
+        # Ensure password == confirmation
         if not (password == confirmation):
             return apology("the passwords do not match", 400)
 
-
+        # Ensure password not blank
         if password == "" or confirmation == "" or username == "":
             return apology("input is blank", 400)
 
-
+        # Ensure username does not exists already
         if len(rows) == 1:
             return apology("username already exist", 400)
         else:
             hashcode = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
             db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", username, hashcode)
 
-
+        # Redirect user to home page
         return redirect("/")
 
     else:
         return render_template("register.html")
+
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
