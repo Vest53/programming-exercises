@@ -141,7 +141,6 @@ def quote():
         # Verifique se o símbolo é válido
         if not symbol or price_data is None:
             flash("Símbolo inválido.")
-            
             return redirect("/quote")
 
         # Extraia o preço da resposta da função lookup
