@@ -276,3 +276,21 @@ def sell():
     """, user_id)
 
     return render_template("sell.html", stocks=stocks)
+
+@app.route("/change_password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    if request.method == "POST":
+        new_password = request.form.get("new_password")
+        confirmation = request.form.get("confirmation")
+
+        if not new_password or new_password != confirmation:
+            flash("As senhas não correspondem ou estão vazias.")
+            return redirect("/change_password")
+
+        # Atualizar a senha no banco de dados
+        db.execute("UPDATE users SET hash = ? WHERE id = ?", generate_password_hash(new_password), session['user_id'])
+        flash("Senha alterada com sucesso!")
+        return redirect("/")
+
+    return render_template("change_password.html")
