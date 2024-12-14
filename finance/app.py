@@ -136,10 +136,10 @@ def logout():
 def quote():
     """Get stock quote."""
 
-    # User reached route via POST (as by submitting a form via POST)
+    
     if request.method == "POST":
         symbol = request.form.get("symbol")
-        # Ensure symbol is not blank
+
         if symbol == "":
             return apology("input is blank", 400)
 
@@ -150,7 +150,7 @@ def quote():
         else:
             return render_template("quoted.html", symbol=stock_quote)
 
-    # User reached route via GET
+
     else:
         return render_template("quote.html")
 
